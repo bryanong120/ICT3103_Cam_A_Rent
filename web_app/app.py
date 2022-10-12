@@ -1,13 +1,17 @@
 from flask import Flask, jsonify, render_template, request, url_for, session, redirect
 import os
 from pymongo import MongoClient
+import db
 
 app = Flask(__name__)
 
 # Connection to mongo database
 
 
+@app.route('/test', methods=['POST', 'GET'])
 def MongoDB():
+    db.db.User.insert_one({"email": "jon@gmail.com"})
+    return "I am connected to db!"
 
 
 @app.route('/', methods=['POST', 'GET'])
