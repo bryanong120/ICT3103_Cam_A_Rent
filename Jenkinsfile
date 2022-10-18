@@ -13,6 +13,7 @@ stages {
 
 	stage('Test') {
 	steps {
+		sh 'cd webapp'
 		sh 'python3 app.py'
 		input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
 	}
