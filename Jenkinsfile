@@ -14,7 +14,7 @@ stages {
 	stage('Test') {
 	steps {
 		sh '''
-		virtual venv
+		virtualenv venv
 		. venv/bin/activate
 		pip3 install -r requirements.txt
 		pytest
