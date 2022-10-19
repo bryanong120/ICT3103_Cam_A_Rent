@@ -1,5 +1,5 @@
 # start by pulling the python image
-FROM python:3.8-alpine
+FROM python:latest
 
 #switch working dir
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt /app
 
 #install the dependencies and packages in requirement file
-RUN pip install -r requirements.txt --no-cache-dir
+RUN pip3 install -r requirements.txt --no-cache-dir
 
 #copy every content from local file into image
 COPY . /app

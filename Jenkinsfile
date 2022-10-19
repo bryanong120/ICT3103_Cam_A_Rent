@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        docker { image 'python:latest' }
+        dockerfile { filename 'Dockerfile.Jenkins' }
     }
 stages {
 	stage('Build') {
@@ -18,9 +18,9 @@ stages {
 		sh '''#!/bin/bash
 		echo "hello world"
 		python3 --version 
-		pip3 install --no-cache-dir -r requirements.txt --user
 		pytest
 		'''
+		//pip3 install --no-cache-dir -r requirements.txt --user
 		//input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
 	}
 	}
