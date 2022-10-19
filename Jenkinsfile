@@ -13,19 +13,20 @@ stages {
 
 	stage('Test') {
 	steps {
-		sh 'cd web_app'
+		sh 'source venv/bin/activate'
+		sh 'pip3 install -r requirements.txt'
 		sh 'python3 app.py'
 		input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
 	}
 	}
 
-	stage('Deploy')
-	{
-	steps {
-		echo "deploying the application"
-		sh "sudo nohup python3 app.py > log.txt 2>&1 &"
-	}
-	}
+	// stage('Deploy')
+	// {
+	// steps {
+	// 	echo "deploying the application"
+	// 	sh "sudo nohup python3 app.py > log.txt 2>&1 &"
+	// }
+	// }
 }
 
 post {
