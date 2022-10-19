@@ -1,5 +1,7 @@
 pipeline {
-agent any
+    agent {
+        docker { image '3.10.8-bullseye' }
+    }
 stages {
 	stage('Build') {
 	parallel {
@@ -16,6 +18,7 @@ stages {
 		sh '''#!/bin/bash
 		echo "hello world"
 		python3 --version 
+		pip3 install virtualenv
 		virtualenv venv
 		. venv/bin/activate
 		pip3 install -r requirements.txt
