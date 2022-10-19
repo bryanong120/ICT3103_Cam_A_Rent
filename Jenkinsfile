@@ -18,7 +18,7 @@ stages {
 		sh '''#!/bin/bash
 		echo "hello world"
 		python3 --version 
-		pip3 install -r requirements.txt --user
+		pip3 install --no-cache-dir -r requirements.txt --user
 		pytest
 		'''
 		//input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
