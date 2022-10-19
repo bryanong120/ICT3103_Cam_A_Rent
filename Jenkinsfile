@@ -6,6 +6,8 @@ stages {
 		stage('Build') {
 		steps {
 			sh 'echo "building the repo"'
+			sh 'source venv/bin/activate'
+			sh 'pip3 install -r requirements.txt'
 		}
 		}
 	}
@@ -13,8 +15,6 @@ stages {
 
 	stage('Test') {
 	steps {
-		sh 'source venv/bin/activate'
-		sh 'pip3 install -r requirements.txt'
 		sh 'python3 app.py'
 		input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
 	}
