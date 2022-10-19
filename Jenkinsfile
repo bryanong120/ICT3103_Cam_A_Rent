@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        docker { image '3.10.8-bullseye' }
+        docker { image 'python:latest' }
     }
 stages {
 	stage('Build') {
