@@ -14,6 +14,7 @@ stages {
 	stage('Test') {
 	steps {
 		sh '''#!/bin/bash
+		echo "hello world" 
 		virtualenv venv
 		. venv/bin/activate
 		pip3 install -r requirements.txt
