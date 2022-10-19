@@ -6,8 +6,6 @@ stages {
 		stage('Build') {
 		steps {
 			sh 'echo "building the repo"'
-			sh 'source venv/bin/activate'
-			sh 'pip3 install -r requirements.txt'
 		}
 		}
 	}
@@ -15,8 +13,10 @@ stages {
 
 	stage('Test') {
 	steps {
+		sh '. venv/bin/activate'
+		sh 'pip3 install -r requirements.txt'
 		sh 'python3 app.py'
-		input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+		//input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
 	}
 	}
 
@@ -32,7 +32,6 @@ stages {
 post {
 		always {
 			echo 'The pipeline completed'
-			junit allowEmptyResults: true, testResults:'**/test_reports/*.xml'
 		}
 		success {				
 			echo "Flask Application Up and running!!"
