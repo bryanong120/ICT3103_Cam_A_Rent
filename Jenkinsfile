@@ -4,13 +4,13 @@ pipeline {
     }
 stages {
 	stage('Build') {
-	// parallel {
+	parallel {
 		stage('Build') {
 		steps {
 			sh 'echo "building the repo"'
 		}
 		}
-	// }
+	}
 	}
 
 	stage('Test') {
