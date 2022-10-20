@@ -2,15 +2,15 @@ pipeline {
     agent {
         dockerfile { filename 'Dockerfile.Jenkins' }
     }
-stages {
+// stages {
 	stage('Build') {
-	parallel {
+	// parallel {
 		stage('Build') {
 		steps {
 			sh 'echo "building the repo"'
 		}
 		}
-	}
+	// }
 	}
 
 	stage('Test') {
@@ -32,7 +32,7 @@ stages {
 	// 	sh "sudo nohup python3 app.py > log.txt 2>&1 &"
 	// }
 	// }
-}
+// }
 
 post {
 		always {
