@@ -11,16 +11,20 @@ app.secret_key = "apple1234"
 
 @app.route('/test', methods=['POST', 'GET'])
 def MongoDB():
-    db.db.User.insert_one({"email": "jon@gmail.com"})
     return "I am connected to db!"
 
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
-    return render_template('index.html')
+    return render_template('home.html')
 
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/signup/', methods=['POST', 'GET'])
+def signup():
+    return render_template('signup.html')
+
+
+@app.route('/login/', methods=['POST', 'GET'])
 def login():
     if request.method == "POST":
         user = request.form["email"]
