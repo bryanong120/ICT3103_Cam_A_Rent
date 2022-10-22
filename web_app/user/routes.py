@@ -1,5 +1,5 @@
 from flask import Flask
-from app import app
+from app_factory import app
 from user.models import User
 
 
