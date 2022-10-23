@@ -1,53 +1,60 @@
 from flask import Flask, jsonify, render_template, request, url_for, session, redirect, session
-from pymongo import MongoClient
+from functools import wraps
 import db
+import os
+from user.models import User
+
 
 app = Flask(__name__)
-app.secret_key = "apple1234"
+app.secret_key = "b'Y\x1alF\x01\xe8i\xcaM\x93\x052\xbd\x1f[\x99'"
 
-# Connection to mongo database
-
-
-@app.route('/test', methods=['POST', 'GET'])
-def MongoDB():
-    return "I am connected to db!"
+# Decorators (logic to check if a user is signed in if not redirect to home page)
 
 
-@app.route('/', methods=['POST', 'GET'])
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            return redirect(url_for("home"))
+    return wrap
+
+
+@app.route('/user/signup/', methods=['POST', 'GET'])
+def signup():
+    return User().signup()
+
+
+@app.route('/user/login', methods=['POST', 'GET'])
+def login():
+    return User().login()
+
+
+@app.route('/user/signout/', methods=['POST', 'GET'])
+def signout():
+    return User().signout()
+
+
+@app.route('/', methods=['GET'])
 def home():
     return render_template('home.html')
 
 
-@app.route('/signup/', methods=['POST', 'GET'])
-def signup():
+@app.route('/dashboard/')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
+
+
+@app.route('/signup/', methods=['GET'])
+def signupPage():
     return render_template('signup.html')
 
 
-@app.route('/login/', methods=['POST', 'GET'])
-def login():
-    if request.method == "POST":
-        user = request.form["email"]
-        session["user"] = user
-        return redirect(url_for("user"))
-    else:
-        if "user" in session:
-            return redirect(url_for("user"))
-        return render_template('login.html')
-
-
-@app.route('/user', methods=['POST', 'GET'])
-def user():
-    if "user" in session:
-        user = session["user"]
-        return f"<h1>{user}<h1>"
-    else:
-        return redirect(url_for("login"))
-
-
-@app.route("/logout")
-def logout():
-    session.pop("user", None)
-    return redirect(url_for("login"))
+@app.route('/login/', methods=['GET'])
+def loginPage():
+    return render_template('login.html')
 
 
 def create_app():
