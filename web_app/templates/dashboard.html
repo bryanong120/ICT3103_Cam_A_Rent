@@ -1,0 +1,28 @@
+<link href="/static/css/dashboard.css" rel="stylesheet">
+{%extends "index.html"%}
+{%block content%} 
+    <div class="card-wrapper">
+        <div class="card">
+            <h2 class="center">Dashboard</h2>
+            <p class="center">Welcome {{session['user']['username']}} !
+            </p>
+            <div class="center">
+                <a class="btn btn-primary" href="/user/signout" role="button">Sign Out</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="center">Profile</h2>
+            <strong>ID:</strong>{{session['user']['_id']}}<br>
+            <strong>Username:</strong>{{session['user']['username']}}<br>
+            <strong>Email:</strong>{{session['user']['email']}}<br>
+        </div>
+        <div class="card">
+            <h2 class="center">Listings</h2>
+            <div class="center">
+                <br><a class="btn btn-primary" href="/user/signout" role="button">View Listings</a></br>
+                <br><a class="btn btn-primary" href="/user/signout" role="button">Create Listing</a></br>
+            </div>
+        </div>
+    </div>
+{% endblock %}

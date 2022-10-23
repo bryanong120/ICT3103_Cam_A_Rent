@@ -1,27 +1,29 @@
 {%extends "index.html"%}
 {%block content%} 
-<link href="/static/css/signin.css" rel="stylesheet">
-<body class="text-center"> 
-  <main class="form-signin w-100 m-auto">
-    <form actiion="#" method="post">
-      <h1 class="h3 mb-3 fw-normal">Please Login</h1>
+<link href="/static/css/login.css" rel="stylesheet">
+<div class="card-wrapper">
+  <div class="card">
+    <main class="form-login w-100 m-auto">
+      <form name="login_form" action="/user/login" method="post">
+        <h1 class="h3 mb-3 fw-normal">Please Login</h1>
+        <div class="form-floating">
+          <input type="email" name="email" class="form-control" id="floatingEmailInput" placeholder="email">
+          <label for="floatingInput">Email</label>
+        </div>
+        <div class="form-floating">
+          <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+          <label for="floatingPassword">Password</label>
+        </div>
 
-      <div class="form-floating">
-        <input type="text" name="username" class="form-control" id="floatingInput" placeholder="name@example.com">
-        <label for="floatingInput">Username</label>
-      </div>
-      <div class="form-floating">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-        <label for="floatingPassword">Password</label>
-      </div>
-
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-    </form>
-  </main>
-</body>
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <p class="error error--hidden"></p>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+      </form>
+    </main>
+  </div>
+</div>
 {%endblock%}
