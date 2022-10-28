@@ -1,0 +1,59 @@
+{%extends "index.html"%}
+{%block content%} 
+<link href="/static/css/uploadListing.css" rel="stylesheet">
+<div class="card-wrapper">
+    <div class="card">
+        <main class="form-uploadListing w-100 m-auto">
+        <form enctype="multipart/form-data" name="uploadlisting_form" action="/user/uploadListing" method="post">
+            <h1 class="h3 mb-3 fw-normal">Add Product</h1>
+            <div class="form-group">
+                <label for="image">Choose Image</label>
+                <input
+                  type="file"
+                  class="form-control-file"
+                  id="image"
+                  name="img"
+                  accept="image/*"
+                  multiple=''
+                  required
+                />
+            </div>
+            <div class="form-group">
+                <label for="titleInput">Listing Title</label>
+                <input type="text" name="title" class="form-control" id="titleInput" placeholder="Name your listing" required>
+            </div>
+            <div class="form-group">
+                <label for="priceInput1">Price For a day</label>
+                <input type="number" name="dayPrice" class="form-control" id="priceInput1" placeholder="$" required>
+            </div>
+            <div class="form-group">
+                <label for="priceInput2">Price For a week</label>
+                <input type="number" name="weekPrice" class="form-control" id="priceInput2" placeholder="$" required>
+            </div>
+            <div class="form-group">
+                <label for="priceInput3">Price For a month</label>
+                <input type="number" name="monthPrice" class="form-control" id="priceInput3" placeholder="$" required>
+            </div>
+            <div class="form-group">
+                <label for="stockInput">Stock</label>
+                <input type="number" name="stock" class="form-control" id="titleInput" placeholder="Amount" required>
+            </div>
+            <div class="form-group">
+                <label for="categorySelect">Select category</label>
+                <select class="form-control" name="category" id="categorySelect" required>
+                    <option value="DSLR">DSLR Cameras</option>
+                    <option value="Instant">Instant Cameras</option>
+                    <option value="Flim">Flim Cameras</option>
+                    <option value="Compact">Compact Cameras</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="descriptionInput">Description</label>
+                <textarea class="form-control" name="description" id="descriptionInput" rows="4" required></textarea>
+              </div>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">List it</button>
+        </form>
+        </main>
+    </div>
+</div>
+{%endblock%}
