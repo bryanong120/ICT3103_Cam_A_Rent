@@ -41,13 +41,14 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/user/uploadListing/', methods=['POST'])
-def uploadListing():
-    return Product().uploadListing()
-
-
-@ app.route('/uploadListing/',)
+@ app.route('/user/uploadListing', methods=['POST', 'GET'])
 @ login_required
+def uploadListing():
+    Product().uploadProduct()
+    return render_template('uploadListing.html')
+
+
+@app.route('/uploadListing/', methods=['GET'])
 def uploadListingPage():
     return render_template('uploadListing.html')
 
