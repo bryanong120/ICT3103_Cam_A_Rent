@@ -1,0 +1,18 @@
+{%extends "index.html"%}
+{%block content%}
+<main>
+    <div>
+        {% for item in single_product1 %}
+        <ul class="list-group">
+            <li class="list-group-item">(camera image)</li>
+            <li class="list-group-item">Name: {{item.title}}</li>
+            <li class="list-group-item">Day Price: {{item.dayPrice}}</li>
+            <li class="list-group-item">Week Price: {{item.weekPrice}}</li>
+            <li class="list-group-item">Month Price: {{item.monthPrice}}</li>
+            <li class="list-group-item">Category: {{item.category}}</li>
+            <li class="list-group-item">Description: {{item.description}}</li>
+        </ul>
+        {% endfor %}
+    </div>
+</main>
+{%endblock%}

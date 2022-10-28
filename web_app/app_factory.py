@@ -2,7 +2,9 @@ from flask import Flask, jsonify, render_template, request, url_for, session, re
 from functools import wraps
 import db
 import os
+from productListing.models import ProductListing
 from user.models import User
+from bson.objectid import ObjectId
 
 
 app = Flask(__name__)
@@ -36,10 +38,17 @@ def signout():
     return User().signout()
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    if request.method == 'POST':
+        post_id = request.form['objectID']
+        single_product = ProductListing().viewProduct(post_id)
 
+        return render_template('productDetails.html', single_product1 = list([single_product]))
+        # return render_template('productListing.html', single_product1 = list([single_product]))
+    else:
+        productlist = ProductListing().homePageProduct()
+        return render_template('home.html', productlist1 = list(productlist))
 
 @app.route('/dashboard/')
 @login_required
@@ -56,6 +65,10 @@ def signupPage():
 def loginPage():
     return render_template('login.html')
 
+# @app.route('/productListing/', methods=['GET'])
+# def productListingPage():
+#     productlist = ProductListing().showAllProduct()
+#     return render_template('productListing.html', productlist1 = list(productlist))
 
 def create_app():
     return app
