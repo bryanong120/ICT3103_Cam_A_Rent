@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request, session, redirect, url_for
 from passlib.hash import pbkdf2_sha256
 import uuid
 from db import db
-
 # status code 200 = OK request fulfilled
 # status code 400 = BAD request
 # status code 401 = Unauthorized entry
@@ -17,7 +16,6 @@ class User:
         return jsonify(user), 200
 
     def signup(self):
-        print(request.form)
         # create the user object
         user = {
             "_id": uuid.uuid4().hex,
@@ -54,3 +52,5 @@ class User:
             return self.start_session(user)
 
         return jsonify({"error": "Invalid login credentials"}), 401
+
+
