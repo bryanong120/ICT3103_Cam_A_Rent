@@ -12,10 +12,6 @@ body {
     background: var(--grey-light);
 }
 
-p {
-    font-weight: bold;
-    color: red;
-}
 
 .card-wrapper {
     padding: 90px 30px;
@@ -27,7 +23,7 @@ p {
 .card {
     margin: 0px 30px 60px;
     padding: 20px 40px;
-    width: 460px;
+    width: 600px;
     box-shadow: 0 8px 26px -4px rgba(0, 0, 0, 0.15);
     border-radius: 5px;
     background: var(--white);
@@ -47,32 +43,11 @@ p {
     }
 }
 
-.form-signup {
-    max-width: 330px;
-    padding: 15px;
+.form-group {
+
+    margin-bottom: 15px;
 }
 
-.form-signup .form-floating:focus-within {
-    z-index: 2;
-}
-
-
-.form-signup input[type="text"] {
-    margin-bottom: -1px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-.form-signup input[type="email"] {
-    margin-bottom: -1px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-.form-signup input[type="password"] {
-    margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+.form-group label {
+    margin-bottom: 5px
 }
