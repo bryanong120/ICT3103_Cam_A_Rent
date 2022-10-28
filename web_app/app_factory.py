@@ -45,7 +45,6 @@ def home():
         single_product = ProductListing().viewProduct(post_id)
 
         return render_template('productDetails.html', single_product1 = list([single_product]))
-        # return render_template('productListing.html', single_product1 = list([single_product]))
     else:
         productlist = ProductListing().homePageProduct()
         return render_template('home.html', productlist1 = list(productlist))
@@ -64,11 +63,6 @@ def signupPage():
 @app.route('/login/', methods=['GET'])
 def loginPage():
     return render_template('login.html')
-
-# @app.route('/productListing/', methods=['GET'])
-# def productListingPage():
-#     productlist = ProductListing().showAllProduct()
-#     return render_template('productListing.html', productlist1 = list(productlist))
 
 def create_app():
     return app
