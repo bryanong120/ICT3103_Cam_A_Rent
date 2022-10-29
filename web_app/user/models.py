@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, session, redirect, url_for
 from passlib.hash import pbkdf2_sha256
 import uuid
 from db import db
+from tokenize import String
 # status code 200 = OK request fulfilled
 # status code 400 = BAD request
 # status code 401 = Unauthorized entry
@@ -53,4 +54,11 @@ class User:
 
         return jsonify({"error": "Invalid login credentials"}), 401
 
+    def viewUserListing(self):
+        if session['logged_in'] == True:
+            user = session['user']
+            user_product = db.Product.find({"uid": user['_id']})
+            return user_product
 
+    def delProduct(self, productID: String):
+        return db.Product.delete_one({"_id": productID})

@@ -1,10 +1,8 @@
 from flask import Flask, jsonify, render_template, request, url_for, session, redirect, session
 from functools import wraps
-import db
+from db import db
 import os
-from productListing.models import ProductListing
 from user.models import User
-from bson.objectid import ObjectId
 from product.models import Product
 
 app = Flask(__name__)
@@ -33,21 +31,22 @@ def login():
     return User().login()
 
 
-@app.route('/user/signout/', methods=['POST'])
+@app.route('/user/signout/', methods=['POST', 'GET'])
 def signout():
     return User().signout()
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['POST', 'GET'])
 def home():
     if request.method == 'POST':
-        post_id = request.form['objectID']
-        single_product = ProductListing().viewProduct(post_id)
-
-        return render_template('productDetails.html', single_product1 = list([single_product]))
+        object_id = request.form['objectID']
+        single_product = Product().viewProduct(object_id)
+        single_username = Product().viewProductUsername(object_id)
+        return render_template('productDetails.html', single_product=list([single_product]), single_username=list([single_username]))
     else:
-        productlist = ProductListing().homePageProduct()
-        return render_template('home.html', productlist1 = list(productlist))
+        productlist = Product().homePageProduct()
+        return render_template("home.html", product=list(productlist))
+
 
 @ app.route('/user/uploadListing', methods=['POST', 'GET'])
 @ login_required
@@ -57,8 +56,27 @@ def uploadListing():
 
 
 @app.route('/uploadListing/', methods=['GET'])
+@login_required
 def uploadListingPage():
     return render_template('uploadListing.html')
+
+
+@app.route('/listing', methods=['POST', 'GET'])
+@login_required
+def listingPage():
+    userProductList = User().viewUserListing()
+    return render_template('listing.html', userProducts=list(userProductList))
+
+
+@app.route('/user/delListing', methods=['POST'])
+@login_required
+def delProduct():
+    if request.method == 'POST':
+        object_id = request.form['delObjID']
+        User().delProduct(object_id)
+        return redirect(url_for("listingPage"))
+    else:
+        return redirect(url_for("listingPage"))
 
 
 @ app.route('/dashboard/')
@@ -75,6 +93,7 @@ def signupPage():
 @ app.route('/login/', methods=['GET'])
 def loginPage():
     return render_template('login.html')
+
 
 def create_app():
     return app

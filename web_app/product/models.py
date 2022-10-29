@@ -5,6 +5,7 @@ import os
 import cloudinary as cloud
 import cloudinary.uploader
 from werkzeug.utils import secure_filename
+from tokenize import String
 
 # cloudinary
 cloud.config(
@@ -59,3 +60,18 @@ class Product:
                 else:
                     flash('Allowed image types are - png, jpg, jpeg, gif')
                     return redirect(url_for("uploadListing"))
+
+    def showAllProduct(self):
+        return db.Product.find()
+
+    def homePageProduct(self):
+        return db.Product.find(limit=9)
+
+    def viewProduct(self, productID: String):
+        # oid = ObjectId(productID)
+        return db.Product.find_one({"_id": productID})
+
+    def viewProductUsername(self, productID: String):
+        product = db.Product.find_one({"_id": productID})
+        return db.User.find_one({"_id": product["uid"]})
+
