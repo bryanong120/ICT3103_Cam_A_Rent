@@ -1,0 +1,61 @@
+{%extends "index.html"%}
+{%block content%}
+<main>
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Cam-A-Rent</h1>
+                <p class="lead text-muted">Welcome to Cam-A-Rent, We offer a platform for camera renting services. The
+                    cameras you need might just be available on from someone else!</p>
+                <p>
+                    <a href="/signup" class="btn btn-primary my-2">Get started here!</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <form action="/search" method="GET" class="d-flex mt-3">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchText"
+            id="searchText">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% for item in product %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img class="card-img-top" src="{{ item.image_url }}" />
+                        <div class="card-body">
+                            <p class="card-text" style="text-align: center">{{item.title}}</p>
+                            <p class="card-text" style="text-align: center">${{item.dayPrice}}/day</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <form action="/" method="POST">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary" name="objectID"
+                                            id="objectID" value="{{item._id}}">View</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer class="text-muted py-5">
+    <div class="container">
+        <p class="float-end mb-1">
+            <a href="#">Back to top</a>
+        </p>
+        <p class="mb-1">2021-2022 &copy; Cam-A-Rent</p>
+    </div>
+</footer>
+
+{%endblock%}
