@@ -75,3 +75,6 @@ class Product:
         product = db.Product.find_one({"_id": productID})
         return db.User.find_one({"_id": product["uid"]})
 
+    def searchProduct(self, searchText: String):
+        return db.Product.find({ "$text": { "$search": searchText } })
+
