@@ -1,4 +1,3 @@
-from crypt import methods
 from flask import Flask, jsonify, render_template, request, url_for, session, redirect, session
 from functools import wraps
 from db import db
@@ -41,17 +40,21 @@ def signout():
 def home():
     if request.method == 'POST':
         object_id = request.form['objectID']
-        single_product = Product().viewProduct(object_id) #get the product to be viewed
-        single_username = Product().viewProductUsername(object_id) #get the User ID that product belongs to
+        single_product = Product().viewProduct(
+            object_id)  # get the product to be viewed
+        single_username = Product().viewProductUsername(
+            object_id)  # get the User ID that product belongs to
         return render_template('productDetails.html', single_product=list([single_product]), single_username=list([single_username]))
     else:
         productlist = Product().homePageProduct()
         return render_template("home.html", product=list(productlist))
 
+
 @app.route('/allProductView', methods=['POST', 'GET'])
 def viewAllProduct():
     productlist = Product().showAllProduct()
     return render_template("allProductView.html", product=list(productlist))
+
 
 @app.route('/search', methods=['POST', 'GET'])
 def search():
@@ -90,6 +93,12 @@ def delProduct():
         return redirect(url_for("listingPage"))
     else:
         return redirect(url_for("listingPage"))
+
+
+@app.route('/user/updateListing', methods=['GET', 'POST'])
+@login_required
+def updateProduct():
+    render_template('editListing.html')
 
 
 @ app.route('/dashboard/')
