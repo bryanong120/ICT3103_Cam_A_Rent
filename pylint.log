@@ -1,0 +1,149 @@
+************* Module app_factory
+web_app/app_factory.py:47: [C0301(line-too-long), ] Line too long (133/100)
+web_app/app_factory.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+web_app/app_factory.py:1: [W0404(reimported), ] Reimport 'session' (imported line 1)
+web_app/app_factory.py:14: [C0103(invalid-name), login_required] Argument name "f" doesn't conform to snake_case naming style
+web_app/app_factory.py:14: [C0116(missing-function-docstring), login_required] Missing function or method docstring
+web_app/app_factory.py:17: [R1705(no-else-return), login_required.wrap] Unnecessary "else" after "return"
+web_app/app_factory.py:25: [C0116(missing-function-docstring), signup] Missing function or method docstring
+web_app/app_factory.py:30: [C0116(missing-function-docstring), login] Missing function or method docstring
+web_app/app_factory.py:35: [C0116(missing-function-docstring), signout] Missing function or method docstring
+web_app/app_factory.py:40: [C0116(missing-function-docstring), home] Missing function or method docstring
+web_app/app_factory.py:41: [R1705(no-else-return), home] Unnecessary "else" after "return"
+web_app/app_factory.py:54: [C0103(invalid-name), viewAllProduct] Function name "viewAllProduct" doesn't conform to snake_case naming style
+web_app/app_factory.py:54: [C0116(missing-function-docstring), viewAllProduct] Missing function or method docstring
+web_app/app_factory.py:60: [C0116(missing-function-docstring), search] Missing function or method docstring
+web_app/app_factory.py:62: [C0103(invalid-name), search] Variable name "search_Text" doesn't conform to snake_case naming style
+web_app/app_factory.py:63: [C0103(invalid-name), search] Variable name "searched_Product" doesn't conform to snake_case naming style
+web_app/app_factory.py:69: [C0103(invalid-name), uploadListing] Function name "uploadListing" doesn't conform to snake_case naming style
+web_app/app_factory.py:69: [C0116(missing-function-docstring), uploadListing] Missing function or method docstring
+web_app/app_factory.py:76: [C0103(invalid-name), uploadListingPage] Function name "uploadListingPage" doesn't conform to snake_case naming style
+web_app/app_factory.py:76: [C0116(missing-function-docstring), uploadListingPage] Missing function or method docstring
+web_app/app_factory.py:82: [C0103(invalid-name), listingPage] Function name "listingPage" doesn't conform to snake_case naming style
+web_app/app_factory.py:82: [C0116(missing-function-docstring), listingPage] Missing function or method docstring
+web_app/app_factory.py:83: [C0103(invalid-name), listingPage] Variable name "userProductList" doesn't conform to snake_case naming style
+web_app/app_factory.py:89: [C0103(invalid-name), delProduct] Function name "delProduct" doesn't conform to snake_case naming style
+web_app/app_factory.py:89: [C0116(missing-function-docstring), delProduct] Missing function or method docstring
+web_app/app_factory.py:90: [R1705(no-else-return), delProduct] Unnecessary "else" after "return"
+web_app/app_factory.py:100: [C0103(invalid-name), updateProduct] Function name "updateProduct" doesn't conform to snake_case naming style
+web_app/app_factory.py:100: [C0116(missing-function-docstring), updateProduct] Missing function or method docstring
+web_app/app_factory.py:106: [C0116(missing-function-docstring), dashboard] Missing function or method docstring
+web_app/app_factory.py:111: [C0103(invalid-name), signupPage] Function name "signupPage" doesn't conform to snake_case naming style
+web_app/app_factory.py:111: [C0116(missing-function-docstring), signupPage] Missing function or method docstring
+web_app/app_factory.py:116: [C0103(invalid-name), loginPage] Function name "loginPage" doesn't conform to snake_case naming style
+web_app/app_factory.py:116: [C0116(missing-function-docstring), loginPage] Missing function or method docstring
+web_app/app_factory.py:120: [C0116(missing-function-docstring), create_app] Missing function or method docstring
+web_app/app_factory.py:1: [W0611(unused-import), ] Unused jsonify imported from flask
+web_app/app_factory.py:3: [W0611(unused-import), ] Unused db imported from db
+web_app/app_factory.py:4: [W0611(unused-import), ] Unused import os
+web_app/app_factory.py:2: [C0411(wrong-import-order), ] standard import "from functools import wraps" should be placed before "from flask import Flask, jsonify, render_template, request, url_for, session, redirect, session"
+web_app/app_factory.py:4: [C0411(wrong-import-order), ] standard import "import os" should be placed before "from flask import Flask, jsonify, render_template, request, url_for, session, redirect, session"
+************* Module db
+web_app/db.py:4: [C0301(line-too-long), ] Line too long (114/100)
+web_app/db.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+web_app/db.py:1: [W0611(unused-import), ] Unused Flask imported from flask
+************* Module app
+web_app/app.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+************* Module tests.conftest
+web_app/tests/conftest.py:27: [C0304(missing-final-newline), ] Final newline missing
+web_app/tests/conftest.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+web_app/tests/conftest.py:7: [C0116(missing-function-docstring), base_app] Missing function or method docstring
+web_app/tests/conftest.py:21: [W0621(redefined-outer-name), client] Redefining name 'base_app' from outer scope (line 7)
+web_app/tests/conftest.py:21: [C0116(missing-function-docstring), client] Missing function or method docstring
+web_app/tests/conftest.py:26: [W0621(redefined-outer-name), runner] Redefining name 'base_app' from outer scope (line 7)
+web_app/tests/conftest.py:26: [C0116(missing-function-docstring), runner] Missing function or method docstring
+web_app/tests/conftest.py:2: [W0611(unused-import), ] Unused Flask imported from flask
+************* Module tests.test_sample
+web_app/tests/test_sample.py:16: [C0303(trailing-whitespace), ] Trailing whitespace
+web_app/tests/test_sample.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+web_app/tests/test_sample.py:9: [C0116(missing-function-docstring), test_access_session] Missing function or method docstring
+web_app/tests/test_sample.py:1: [W0611(unused-import), ] Unused lseek imported from os
+web_app/tests/test_sample.py:2: [W0611(unused-import), ] Unused import pytest
+web_app/tests/test_sample.py:3: [W0611(unused-import), ] Unused Flask imported from flask
+************* Module user.models
+web_app/user/models.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+web_app/user/models.py:11: [C0115(missing-class-docstring), User] Missing class docstring
+web_app/user/models.py:13: [C0116(missing-function-docstring), User.start_session] Missing function or method docstring
+web_app/user/models.py:13: [R0201(no-self-use), User.start_session] Method could be a function
+web_app/user/models.py:19: [C0116(missing-function-docstring), User.signup] Missing function or method docstring
+web_app/user/models.py:40: [W1404(implicit-str-concat), ] Implicit string concatenation found in set
+web_app/user/models.py:42: [C0116(missing-function-docstring), User.signout] Missing function or method docstring
+web_app/user/models.py:42: [R0201(no-self-use), User.signout] Method could be a function
+web_app/user/models.py:46: [C0116(missing-function-docstring), User.login] Missing function or method docstring
+web_app/user/models.py:57: [C0103(invalid-name), User.viewUserListing] Method name "viewUserListing" doesn't conform to snake_case naming style
+web_app/user/models.py:57: [C0116(missing-function-docstring), User.viewUserListing] Missing function or method docstring
+web_app/user/models.py:58: [C0121(singleton-comparison), User.viewUserListing] Comparison 'session['logged_in'] == True' should be 'session['logged_in'] is True' if checking for the singleton value True, or 'session['logged_in']' if testing for truthiness
+web_app/user/models.py:57: [R1710(inconsistent-return-statements), User.viewUserListing] Either all return statements in a function should return an expression, or none of them should.
+web_app/user/models.py:57: [R0201(no-self-use), User.viewUserListing] Method could be a function
+web_app/user/models.py:63: [C0103(invalid-name), User.delProduct] Method name "delProduct" doesn't conform to snake_case naming style
+web_app/user/models.py:63: [C0103(invalid-name), User.delProduct] Argument name "productID" doesn't conform to snake_case naming style
+web_app/user/models.py:63: [C0116(missing-function-docstring), User.delProduct] Missing function or method docstring
+web_app/user/models.py:63: [R0201(no-self-use), User.delProduct] Method could be a function
+web_app/user/models.py:1: [W0611(unused-import), ] Unused Flask imported from flask
+web_app/user/models.py:3: [C0411(wrong-import-order), ] standard import "import uuid" should be placed before "from flask import Flask, jsonify, request, session, redirect, url_for"
+web_app/user/models.py:5: [C0411(wrong-import-order), ] standard import "from tokenize import String" should be placed before "from flask import Flask, jsonify, request, session, redirect, url_for"
+************* Module user.routes
+web_app/user/routes.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+web_app/user/routes.py:7: [C0116(missing-function-docstring), signup] Missing function or method docstring
+web_app/user/routes.py:12: [C0116(missing-function-docstring), login] Missing function or method docstring
+web_app/user/routes.py:17: [C0116(missing-function-docstring), signout] Missing function or method docstring
+web_app/user/routes.py:1: [W0611(unused-import), ] Unused Flask imported from flask
+************* Module product.models
+web_app/product/models.py:80: [C0305(trailing-newlines), ] Trailing newlines
+web_app/product/models.py:1: [C0114(missing-module-docstring), ] Missing module docstring
+web_app/product/models.py:21: [C0116(missing-function-docstring), allowed_file] Missing function or method docstring
+web_app/product/models.py:25: [C0115(missing-class-docstring), Product] Missing class docstring
+web_app/product/models.py:26: [C0103(invalid-name), Product.uploadProduct] Method name "uploadProduct" doesn't conform to snake_case naming style
+web_app/product/models.py:26: [C0116(missing-function-docstring), Product.uploadProduct] Missing function or method docstring
+web_app/product/models.py:29: [C0121(singleton-comparison), Product.uploadProduct] Comparison 'session['logged_in'] == True' should be 'session['logged_in'] is True' if checking for the singleton value True, or 'session['logged_in']' if testing for truthiness
+web_app/product/models.py:43: [R1705(no-else-return), Product.uploadProduct] Unnecessary "else" after "return"
+web_app/product/models.py:26: [R1710(inconsistent-return-statements), Product.uploadProduct] Either all return statements in a function should return an expression, or none of them should.
+web_app/product/models.py:26: [R0201(no-self-use), Product.uploadProduct] Method could be a function
+web_app/product/models.py:64: [C0103(invalid-name), Product.showAllProduct] Method name "showAllProduct" doesn't conform to snake_case naming style
+web_app/product/models.py:64: [C0116(missing-function-docstring), Product.showAllProduct] Missing function or method docstring
+web_app/product/models.py:64: [R0201(no-self-use), Product.showAllProduct] Method could be a function
+web_app/product/models.py:67: [C0103(invalid-name), Product.homePageProduct] Method name "homePageProduct" doesn't conform to snake_case naming style
+web_app/product/models.py:67: [C0116(missing-function-docstring), Product.homePageProduct] Missing function or method docstring
+web_app/product/models.py:67: [R0201(no-self-use), Product.homePageProduct] Method could be a function
+web_app/product/models.py:70: [C0103(invalid-name), Product.viewProduct] Method name "viewProduct" doesn't conform to snake_case naming style
+web_app/product/models.py:70: [C0103(invalid-name), Product.viewProduct] Argument name "productID" doesn't conform to snake_case naming style
+web_app/product/models.py:70: [C0116(missing-function-docstring), Product.viewProduct] Missing function or method docstring
+web_app/product/models.py:70: [R0201(no-self-use), Product.viewProduct] Method could be a function
+web_app/product/models.py:74: [C0103(invalid-name), Product.viewProductUsername] Method name "viewProductUsername" doesn't conform to snake_case naming style
+web_app/product/models.py:74: [C0103(invalid-name), Product.viewProductUsername] Argument name "productID" doesn't conform to snake_case naming style
+web_app/product/models.py:74: [C0116(missing-function-docstring), Product.viewProductUsername] Missing function or method docstring
+web_app/product/models.py:74: [R0201(no-self-use), Product.viewProductUsername] Method could be a function
+web_app/product/models.py:78: [C0103(invalid-name), Product.searchProduct] Method name "searchProduct" doesn't conform to snake_case naming style
+web_app/product/models.py:78: [C0103(invalid-name), Product.searchProduct] Argument name "searchText" doesn't conform to snake_case naming style
+web_app/product/models.py:78: [C0116(missing-function-docstring), Product.searchProduct] Missing function or method docstring
+web_app/product/models.py:78: [R0201(no-self-use), Product.searchProduct] Method could be a function
+web_app/product/models.py:1: [W0611(unused-import), ] Unused Flask imported from flask
+web_app/product/models.py:1: [W0611(unused-import), ] Unused jsonify imported from flask
+web_app/product/models.py:4: [W0611(unused-import), ] Unused import os
+web_app/product/models.py:6: [W0611(unused-import), ] Unused import cloudinary.uploader
+web_app/product/models.py:2: [C0411(wrong-import-order), ] standard import "import uuid" should be placed before "from flask import Flask, jsonify, request, session, redirect, url_for, flash"
+web_app/product/models.py:4: [C0411(wrong-import-order), ] standard import "import os" should be placed before "from flask import Flask, jsonify, request, session, redirect, url_for, flash"
+web_app/product/models.py:8: [C0411(wrong-import-order), ] standard import "from tokenize import String" should be placed before "from flask import Flask, jsonify, request, session, redirect, url_for, flash"
+************* Module product.__init__
+web_app/product/__init__.py:1: [R0801(duplicate-code), ] Similar lines in 2 files
+==app_factory:[23:38]
+==user.routes:[5:18]
+@app.route('/user/signup/', methods=['POST'])
+def signup():
+    return User().signup()
+
+
+@app.route('/user/login/', methods=['POST'])
+def login():
+    return User().login()
+
+
+@app.route('/user/signout/', methods=['POST', 'GET'])
+def signout():
+    return User().signout()
+
+
+
+------------------------------------------------------------------
+Your code has been rated at 3.20/10 (previous run: 3.20/10, +0.00)
+
