@@ -23,7 +23,7 @@ stages {
 		echo "hello world"
 		python3 --version 
 		pytest
-		python3 -m pylint --output-format=parseable --fail-under=3.0 module --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" | tee pylint.log || echo "pylint exited with $?"
+		python3 -m pylint --output-format=parseable --fail-under=3.0 ./web_app --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" | tee pylint.log || echo "pylint exited with $?"
 		'''
 		//pip3 install --no-cache-dir -r requirements.txt --user
 		//input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
