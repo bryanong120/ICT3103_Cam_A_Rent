@@ -20,6 +20,8 @@ stages {
 		python3 --version 
 		pytest
 		'''
+		dependencyCheck additionalArguments: '', odcInstallation: 'default'
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
 		//pip3 install --no-cache-dir -r requirements.txt --user
 		//input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
 	}
