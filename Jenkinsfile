@@ -1,20 +1,23 @@
 pipeline {
-    agent {
-        dockerfile { filename 'Dockerfile.Jenkins' }
-    }
+    agent none 
 stages {
 	//stage('Build') {
 	// parallel {
 		stage('Build') {
+			agent any 
 		steps {
+			sh 'echo "building the repo"'
 			dependencyCheck additionalArguments: '', odcInstallation: 'default'
-			dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
 		}
 		}
 	// }
 	//}
 
 	stage('Test') {
+		    agent {
+        dockerfile { filename 'Dockerfile.Jenkins' }
+    }
 	steps {
 		sh '''#!/bin/bash
 		echo "hello world"
