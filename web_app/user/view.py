@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from models import User
-from models import Product
+from user.models import User
+from product.models import Product
 from decorator import login_required
 
 user_bp = Blueprint("user_bp", __name__,
