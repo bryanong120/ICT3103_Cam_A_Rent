@@ -5,7 +5,7 @@
 <div class="card-wrapper">
     <div class="card">
         {% for item in single_product%}
-        <form method="post" action="" enctype="multipart/form-data">
+        <form method="post" action="{{url_for('user_bp.updateListing', id=item._id)}}" enctype="multipart/form-data">
             {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
             <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
             {% endfor %} {% endif %} {% endwith %}
@@ -13,7 +13,7 @@
             <dl>
                 <p>
                     <label for="imageInput">Choose Image</label>
-                    <input type="file" name="file" accept="image/*" class="form-control" autocomplete="off" required>
+                    <input type="file" name="file" accept="image/*" class="form-control" autocomplete="off">
                 </p>
             </dl>
             <d2>
@@ -49,11 +49,11 @@
             <d7>
                 <p>
                     <label for="categorySelect">Select category</label>
-                    <select class="form-control" name="category" id="categorySelect" value="{{item.category}}" required>
-                        <option value="DSLR">DSLR Cameras</option>
-                        <option value="Instant">Instant Cameras</option>
-                        <option value="Flim">Flim Cameras</option>
-                        <option value="Compact">Compact Cameras</option>
+                    <select class="form-control" name="category" id="categorySelect" required>
+                        <option value="DSLR"{%if item.category == "DSLR" %} selected="selected" {% endif %}>DSLR Cameras</option>
+                        <option value="Instant"{%if item.category == "Instant" %} selected="selected" {% endif %}>Instant Cameras</option>
+                        <option value="Flim"{%if item.category == "Flim" %} selected="selected" {% endif %}>Flim Cameras</option>
+                        <option value="Compact"{%if item.category == "Compact" %} selected="selected" {% endif %}>Compact Cameras</option>
                     </select>
                 </p>
             </d7>
@@ -64,7 +64,7 @@
                 </p>
             </d8>
             <p>
-                <button class="w-100 btn btn-info" type="submit">UPDATE </button>
+                <button class="w-100 btn btn-info" type="submit" name="updateObjID" id="updateObjID" value="{{item._id}}">UPDATE </button>
             </p>
         </form>
         {% endfor %}
