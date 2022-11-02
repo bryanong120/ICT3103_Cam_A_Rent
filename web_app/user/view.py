@@ -40,9 +40,20 @@ def delListing():
 
 
 @user_bp.route('/editListing/', methods=['POST', 'GET'])
+@login_required
 def editListing():
     if request.method == 'POST':
         object_id = request.form['editObjID']
+        single_product = Product().viewProduct(object_id)
+        return render_template('editListing.html', single_product=list([single_product]))
+
+
+@user_bp.route('/updateListing/', methods=['POST', 'GET'])
+@login_required
+def updateListing():
+    if request.method == 'POST':
+        object_id = request.form['updateObjID']
+        Product().updateProduct(object_id)
         single_product = Product().viewProduct(object_id)
         return render_template('editListing.html', single_product=list([single_product]))
 
