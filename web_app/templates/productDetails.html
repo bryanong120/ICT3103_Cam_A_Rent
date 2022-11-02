@@ -8,8 +8,7 @@
                     {% for item in single_product %}
                     {% for i in single_username%}
                     <i class="fab fa-apple fa-lg pt-3 pb-1 px-3"></i>
-                    <img src="{{ item.image_url }}"
-                        class="card-img-top"/>
+                    <img src="{{ item.image_url }}" class="card-img-top" />
                     <div class="card-body">
                         <div class="text-center">
                             <h5 class="card-title">{{item.title}}</h5>
@@ -25,6 +24,9 @@
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span>Month Price: </span><span>${{item.monthPrice}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>InitialDeposit: </span><span>${{item.initialDeposit}}</span>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span>Stock: </span><span>{{item.stock}}</span>

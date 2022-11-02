@@ -48,6 +48,7 @@ class Product:
                         "dayPrice": request.form.get('dayPrice'),
                         "weekPrice": request.form.get('weekPrice'),
                         "monthPrice": request.form.get('monthPrice'),
+                        "initialDeposit": request.form.get('initialDeposit'),
                         "stock": request.form.get('stock'),
                         "category": request.form.get('category'),
                         "image_url": upload_result['secure_url'],

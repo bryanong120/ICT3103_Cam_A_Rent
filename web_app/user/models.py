@@ -22,7 +22,8 @@ class User:
             "_id": uuid.uuid4().hex,
             "username": request.form.get('username'),
             "email": request.form.get('email'),
-            "password": request.form.get('password')
+            "password": request.form.get('password'),
+            "virtualCredit": "1000"
         }
 
         # encrypt the password
