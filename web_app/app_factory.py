@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 from user.view import user_bp
 from product.view import product_bp
 from product.models import Product
-from decorator import login_required
 
 app = Flask(__name__, instance_relative_config=False)
 
