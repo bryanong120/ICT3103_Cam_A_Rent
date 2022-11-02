@@ -1,8 +1,10 @@
+from datetime import datetime
 from flask import jsonify, request, session, redirect, url_for, flash
 from passlib.hash import pbkdf2_sha256
 import uuid
 from db import db
 from tokenize import String
+from datetime import datetime
 # status code 200 = OK request fulfilled
 # status code 400 = BAD request
 # status code 401 = Unauthorized entry
@@ -23,7 +25,7 @@ class User:
             "username": request.form.get('username'),
             "email": request.form.get('email'),
             "password": request.form.get('password'),
-            "virtualCredit": "1000"
+            "virtualCredit": 1000
         }
 
         # encrypt the password
@@ -56,10 +58,52 @@ class User:
         return jsonify({"error": "Invalid login credentials"}), 401
 
     def viewListing(self):
-        if session['logged_in'] == True:
+        if session['logged_in'] :
             user = session['user']
             user_product = db.Product.find({"uid": user['_id']})
             return user_product
 
-    def delListing(self, productID: String):
+    def delListing(self, productID: str):
         return db.Product.delete_one({"_id": productID})
+
+    def findUserDetails(self, userID: str):
+        if session['logged_in'] :
+            uID = session['user']['_id']
+            userDetails = db.User.find_one({'_id': uID})
+            return userDetails
+
+    def deductDeposit(self, productObj):
+        error = ""
+        if session['logged_in'] :
+            uID = session['user']['_id']
+            userObj = User().findUserDetails(uID)
+
+            try:
+                dValue = int(productObj['initialDeposit'])
+            except:
+                error = "deposit value is not an int"
+                return flash(error)
+
+            if userObj['virtualCredit'] <  dValue :
+                error = "insufficient credit!"
+                return flash(error)
+
+            #Deduct credits from user
+            db.User.update_one(
+                {'_id': uID}, 
+                {'$inc': 
+                    {'virtualCredit': -dValue}
+                    })
+            successMsg = "Successfully deducted ${} from {}".format(dValue, session['user']['username'])
+            flash(successMsg)
+
+            #Insert deposit logs 
+            deposit = {
+                'pid' : productObj['_id'],
+                'amount': dValue,
+                'owner': productObj['uid'],
+                'rentee': uID,
+                'date' : datetime.utcnow(),
+            }
+            db.Deposit.insert_one(deposit)
+            

@@ -68,13 +68,13 @@ class Product:
     def homePageProduct(self):
         return db.Product.find(limit=9)
 
-    def viewProduct(self, productID: String):
+    def viewProduct(self, productID: str):
         # oid = ObjectId(productID)
         return db.Product.find_one({"_id": productID})
 
-    def viewProductUsername(self, productID: String):
+    def viewProductUsername(self, productID: str):
         product = db.Product.find_one({"_id": productID})
         return db.User.find_one({"_id": product["uid"]})
 
-    def searchProduct(self, searchText: String):
+    def searchProduct(self, searchText: str):
         return db.Product.find({"$text": {"$search": searchText}})

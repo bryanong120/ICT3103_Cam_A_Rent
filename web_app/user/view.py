@@ -1,3 +1,4 @@
+from itertools import product
 from flask import Blueprint, render_template, request, redirect, url_for
 from user.models import User
 from product.models import Product
@@ -47,10 +48,20 @@ def viewListing():
 
 
 @user_bp.route('/uploadListing/', methods=['POST', 'GET'])
-@ login_required
+@login_required
 def uploadListing():
     if request.method == "POST":
         Product().uploadProduct()
         return render_template('uploadListing.html')
     else:
         return render_template('uploadListing.html')
+
+@user_bp.route('/deposit', methods=['POST'])
+@login_required
+def deposit():
+    productObj = Product().viewProduct(request.form['depositPID'])
+    single_username = Product().viewProductUsername(request.form['depositPID'])
+    User().deductDeposit(productObj)
+    return render_template('productDetails.html', single_product = list([productObj]), single_username=list([single_username]))
+        
+        
