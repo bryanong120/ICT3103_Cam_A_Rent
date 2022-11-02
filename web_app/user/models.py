@@ -1,6 +1,7 @@
 from flask import jsonify, request, session, redirect, url_for, flash
 from passlib.hash import pbkdf2_sha256
 import uuid
+import re
 from db import db
 from tokenize import String
 # status code 200 = OK request fulfilled
@@ -17,12 +18,30 @@ class User:
         return jsonify(user), 200
 
     def signup(self):
+    	#input validation
+        #username validation
+        username =  request.form.get('username')
+        if len(username) < 3:
+            return jsonify({"error": "Username must be at least 3 characters"}), 400 #username 3 characters and above
+        if re.match("^[a-zA-Z0-9_.-]+$", username) == None:
+            return jsonify({"error": "Username can only include letters, numbers and . , -, _ but not special characters"}), 400 #username only allows alphanumeric and -, ., _ symbols
+
+        #email validation
+        email = request.form.get('email')
+        if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
+            return jsonify({"error": "Please input valid email"}), 400
+        
+        #password validation
+        password = request.form.get('password')
+        if len(password) == 0:
+            return jsonify({"error": "Password cannot be empty"}), 400
+            
         # create the user object
         user = {
             "_id": uuid.uuid4().hex,
-            "username": request.form.get('username'),
-            "email": request.form.get('email'),
-            "password": request.form.get('password')
+            "username": username,
+            "email": email,
+            "password": password
         }
 
         # encrypt the password
@@ -45,7 +64,13 @@ class User:
 
     def login(self):
         # check for user email in db and if password matches
-        user = db.User.find_one({"email": request.form.get('email')})
+        
+        #login user validation
+        login_email = request.form.get('email')
+        if re.match("^[a-zA-Z0-9@_.-]+$", login_email) == None:
+            return jsonify({"error": "Please input a valid email"}), 400
+            
+        user = db.User.find_one({"email": login_email})
 
         ## request.form.get('password') is un-encrypted
         ## user['password'] is encrypted
