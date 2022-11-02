@@ -18,24 +18,26 @@ class User:
         return jsonify(user), 200
 
     def signup(self):
-    	#input validation
-        #username validation
-        username =  request.form.get('username')
+        # input validation
+        # username validation
+        username = request.form.get('username')
         if len(username) < 3:
-            return jsonify({"error": "Username must be at least 3 characters"}), 400 #username 3 characters and above
+            # username 3 characters and above
+            return jsonify({"error": "Username must be at least 3 characters"}), 400
         if re.match("^[a-zA-Z0-9_.-]+$", username) == None:
-            return jsonify({"error": "Username can only include letters, numbers and . , -, _ but not special characters"}), 400 #username only allows alphanumeric and -, ., _ symbols
+            # username only allows alphanumeric and -, ., _ symbols
+            return jsonify({"error": "Username can only include letters, numbers and . , -, _ but not special characters"}), 400
 
-        #email validation
+        # email validation
         email = request.form.get('email')
         if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
             return jsonify({"error": "Please input valid email"}), 400
-        
-        #password validation
+
+        # password validation
         password = request.form.get('password')
         if len(password) == 0:
             return jsonify({"error": "Password cannot be empty"}), 400
-            
+
         # create the user object
         user = {
             "_id": uuid.uuid4().hex,
@@ -64,12 +66,12 @@ class User:
 
     def login(self):
         # check for user email in db and if password matches
-        
-        #login user validation
+
+        # login user validation
         login_email = request.form.get('email')
         if re.match("^[a-zA-Z0-9@_.-]+$", login_email) == None:
             return jsonify({"error": "Please input a valid email"}), 400
-            
+
         user = db.User.find_one({"email": login_email})
 
         ## request.form.get('password') is un-encrypted
