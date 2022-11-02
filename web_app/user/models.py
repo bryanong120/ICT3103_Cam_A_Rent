@@ -35,13 +35,25 @@ class User:
         password = request.form.get('password')
         if len(password) == 0:
             return jsonify({"error": "Password cannot be empty"}), 400
+
+        if len(password) < 12:
+            return jsonify({"error": "Password should be at least 12 characters long"}), 400
+
+        if len(password) > 128:
+            return jsonify({"error": "Password cannot be longer than 128 characters"}), 400
+
+        if username in password:
+            return jsonify({"error": "Password cannot contain your username"}), 400
+
+
             
         # create the user object
         user = {
             "_id": uuid.uuid4().hex,
             "username": username,
             "email": email,
-            "password": password
+            "password": password,
+            "failed_logins": 0
         }
 
         # encrypt the password
@@ -76,6 +88,9 @@ class User:
         ## user['password'] is encrypted
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
             return self.start_session(user)
+
+        elif user and not(pbkdf2_sha256.verify(request.form.get('password'), user['password'])):
+            return jsonify({"error": "Testing"}), 401
 
         return jsonify({"error": "Invalid login credentials"}), 401
 
