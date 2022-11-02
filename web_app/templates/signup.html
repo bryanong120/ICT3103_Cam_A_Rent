@@ -1,6 +1,6 @@
 {%extends "index.html"%}
 {%block content%} 
-<link href="/static/css/signup.css" rel="stylesheet">
+<link href="{{ url_for('static',filename='css/signup.css') }}" rel="stylesheet">
 <div class="card-wrapper">
   <div class="card">
       <main class="form-signup w-100 m-auto">

@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, session, redirect, url_for
+from flask import jsonify, request, session, redirect, url_for, flash
 from passlib.hash import pbkdf2_sha256
 import uuid
 from db import db
@@ -41,24 +41,24 @@ class User:
 
     def signout(self):
         session.clear()
-        return redirect(url_for("home"))
+        return redirect(url_for("homePage"))
 
     def login(self):
-        user = db.User.find_one({"email": request.form.get('email')})
         # check for user email in db and if password matches
+        user = db.User.find_one({"email": request.form.get('email')})
+
         ## request.form.get('password') is un-encrypted
         ## user['password'] is encrypted
-
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
             return self.start_session(user)
 
         return jsonify({"error": "Invalid login credentials"}), 401
 
-    def viewUserListing(self):
+    def viewListing(self):
         if session['logged_in'] == True:
             user = session['user']
             user_product = db.Product.find({"uid": user['_id']})
             return user_product
 
-    def delProduct(self, productID: String):
+    def delListing(self, productID: String):
         return db.Product.delete_one({"_id": productID})

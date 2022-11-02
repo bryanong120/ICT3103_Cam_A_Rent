@@ -1,11 +1,10 @@
-from flask import Flask, jsonify, request, session, redirect, url_for, flash
+from flask import jsonify, request, session, redirect, url_for, flash
 import uuid
 from db import db
-import os
+from tokenize import String
 import cloudinary as cloud
 import cloudinary.uploader
 from werkzeug.utils import secure_filename
-from tokenize import String
 
 # cloudinary
 cloud.config(
@@ -32,12 +31,12 @@ class Product:
             if request.method == "POST":
                 if 'file' not in request.files:
                     flash('No file part')
-                    return redirect(url_for("uploadListing"))
+                    return redirect(url_for("user_bp.uploadListing"))
                 file = request.files['file']
                 print(secure_filename(file.filename))
                 if file.filename == '':
                     flash('No image selected for uploading')
-                    return redirect(url_for("uploadListing"))
+                    return redirect(url_for("user_bp.uploadListing"))
 
                 # check if image file is in acceptable format png, jpeg, jpg
                 if file and allowed_file(file.filename):
@@ -56,10 +55,11 @@ class Product:
                     }
                     db.Product.insert_one(product)
                     flash('Image successfully uploaded')
-                    return redirect(url_for("dashboard"))
+                    return redirect(url_for("user_bp.dashboardPage"))
                 else:
                     flash('Allowed image types are - png, jpg, jpeg, gif')
-                    return redirect(url_for("uploadListing"))
+                    print("not acceptable!")
+                    return redirect(url_for("user_bp.uploadListing"))
 
     def showAllProduct(self):
         return db.Product.find()
@@ -76,5 +76,4 @@ class Product:
         return db.User.find_one({"_id": product["uid"]})
 
     def searchProduct(self, searchText: String):
-        return db.Product.find({ "$text": { "$search": searchText } })
-
+        return db.Product.find({"$text": {"$search": searchText}})
