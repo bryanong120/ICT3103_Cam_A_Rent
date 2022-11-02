@@ -2,9 +2,10 @@ from flask import Flask, render_template, request
 from user.view import user_bp
 from product.view import product_bp
 from product.models import Product
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__, instance_relative_config=False)
-
+csrf = CSRFProtect(app)
 # routes
 
 
@@ -36,4 +37,5 @@ def create_app():
     app.secret_key = "b'Y\x1alF\x01\xe8i\xcaM\x93\x052\xbd\x1f[\x99'"
     app.register_blueprint(user_bp, url_prefix='/user')
     app.register_blueprint(product_bp, url_prefix='/product')
+    csrf.init_app(app)
     return app
