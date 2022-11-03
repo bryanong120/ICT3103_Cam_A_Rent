@@ -5,6 +5,7 @@
   <div class="card">
     <main class="form-login w-100 m-auto">
       <form name="login_form" action="/user/login" method="post">
+	  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <h1 class="h3 mb-3 fw-normal">Please Login</h1>
         <div class="form-floating">
           <input type="email" name="email" class="form-control" id="floatingEmailInput" placeholder="email">
