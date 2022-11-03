@@ -15,11 +15,11 @@
     </section>
     <div class="album py-5 bg-light">
         <div class="container">
-                <form action="/product/search/" method="POST" class="d-flex mt-3">
-					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <form action="/product/search/" method="POST" class="d-flex mt-3">					
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchText"
                         id="searchText">
                     <button class="btn btn-success" type="submit">Search</button>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 </form>
             <p>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
