@@ -13,7 +13,7 @@ load_dotenv()
 def tests(client):
     with client:
         client.post("/user/login/", data = {
-            "email": os.getenv('EMAIL_TEST'),
+            "email": str(os.getenv('EMAIL_TEST')),
             "password" : os.getenv('PASSWORD_TEST')})
         
         #Check if login works
