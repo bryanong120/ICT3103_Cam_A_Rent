@@ -19,6 +19,11 @@ stages {
         dockerfile { filename 'Dockerfile.Jenkins' }
     }
 	steps {
+		sh "pwd"
+		dir("web_app"){
+			sh "cp .env.example .env"
+		}
+		sh "pwd"
 		sh '''#!/bin/bash
 		pytest
 		python3 -m pylint --output-format=parseable --fail-under=3.0 ./web_app --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" | tee pylint.log || echo "pylint exited with $?"
