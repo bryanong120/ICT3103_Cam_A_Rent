@@ -14,7 +14,7 @@ def tests(client):
     with client:
         client.post("/user/login/", data = {
             "email": str(os.getenv('EMAIL_TEST')),
-            "password" : os.getenv('PASSWORD_TEST')})
+            "password" : str(os.getenv('PASSWORD_TEST'))})
         
         #Check if login works
         assert session['logged_in'] == True
