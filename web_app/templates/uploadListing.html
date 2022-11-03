@@ -5,8 +5,8 @@
 <div class="card-wrapper">
     <div class="card">
         <form method="post" action="/user/uploadListing" enctype="multipart/form-data">
-            {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message
-            in messages %}
+		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
             <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
             {% endfor %} {% endif %} {% endwith %}
             <h1 class="h3 mb-3 fw-normal">Add Product</h1>

@@ -27,6 +27,7 @@
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <form action="/" method="POST">
+				    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                     <button type="submit" class="btn btn-sm btn-outline-secondary" name="objectID" id="objectID"
                       value="{{item._id}}">View</button>
                   </form>

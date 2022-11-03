@@ -62,6 +62,51 @@ class Product:
                     print("not acceptable!")
                     return redirect(url_for("user_bp.uploadListing"))
 
+    def updateProduct(self, productID: String):
+        # check if user is logged in
+        if session['logged_in'] == True:
+            filter = {"_id": productID}
+            # check request if it is POST
+            if request.method == "POST":
+                file = request.files['file']
+                if file.filename == '':
+                    product = {"$set":
+                               {
+                                   "title": request.form.get('title'),
+                                   "dayPrice": request.form.get('dayPrice'),
+                                   "weekPrice": request.form.get('weekPrice'),
+                                   "monthPrice": request.form.get('monthPrice'),
+                                   "stock": request.form.get('stock'),
+                                   "category": request.form.get('category'),
+                                   "description": (request.form.get('description')).strip()
+                               }
+                               }
+                    db.Product.update_one(filter, product)
+                    flash('Successfully updated')
+                    return redirect(url_for("user_bp.updateListing"))
+                else:
+                    # check if image file is in acceptable format png, jpeg, jpg
+                    if file and allowed_file(file.filename):
+                        upload_result = cloud.uploader.upload(file)
+                        product = {"$set":
+                                   {
+                                       "title": request.form.get('title'),
+                                       "dayPrice": request.form.get('dayPrice'),
+                                       "weekPrice": request.form.get('weekPrice'),
+                                       "monthPrice": request.form.get('monthPrice'),
+                                       "stock": request.form.get('stock'),
+                                       "category": request.form.get('category'),
+                                       "image_url": upload_result['secure_url'],
+                                       "description": (request.form.get('description')).strip()
+                                   }
+                                   }
+                        db.Product.update_one(filter, product)
+                        flash('Image successfully uploaded')
+                        return redirect(url_for("user_bp.updateListing"))
+                    else:
+                        flash('Allowed image types are - png, jpg, jpeg, gif')
+                        return redirect(url_for("user_bp.updateListing"))
+
     def showAllProduct(self):
         return db.Product.find()
 
