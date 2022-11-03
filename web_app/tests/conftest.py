@@ -10,6 +10,8 @@ def base_app():
         "TESTING": True,
     })
 
+    app.config['WTF_CSRF_ENABLED'] = False
+
     # other setup can go here
 
     yield app
