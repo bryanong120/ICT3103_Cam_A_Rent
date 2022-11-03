@@ -1,3 +1,4 @@
+import os
 from flask import jsonify, request, session, redirect, url_for, flash
 import uuid
 from db import db
@@ -5,12 +6,15 @@ from tokenize import String
 import cloudinary as cloud
 import cloudinary.uploader
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # cloudinary
 cloud.config(
-    cloud_name="ds5ib7aij",
-    api_key="867155213339131",
-    api_secret="yt-vTKEI9Ad0p-fsI5emvfSqudE"
+    cloud_name=os.getenv('cloud_name'),
+    api_key=os.getenv('api_key'),
+    api_secret=os.getenv('api_secret')
 )
 
 UPLOAD_FOLDER = 'product/UPLOAD_FOLDER'
