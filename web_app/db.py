@@ -1,5 +1,8 @@
 from flask_pymongo import pymongo
+from dotenv import load_dotenv
+import os
 
-DB_URI = "mongodb+srv://nikoswee:apple1234@rent-a-cam.tf5um47.mongodb.net/?retryWrites=true&w=majority"
+load_dotenv()
+DB_URI = os.getenv('DB_URI')
 client = pymongo.MongoClient(DB_URI, tls=True)
 db = client.get_database('Cam-A-Rent')
