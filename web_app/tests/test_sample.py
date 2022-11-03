@@ -10,14 +10,14 @@ from flask import Flask, session, url_for
 def tests(client):
     with client:
         client.post("/user/login/", data = {
-            "email": "2001011@sit.singaporetech.edu.sg ",
+            "email": "2001011@sit.singaporetech.edu.sg",
             "password" : "P@ssw0rd1"})
         
         #Check if login works
         assert session['logged_in'] == True
 
         #Check if session information is correct
-        assert session["user"]["email"] == os.getenv('EMAIL_TEST')
+        assert session["user"]["email"] == '2001011@sit.singaporetech.edu.sg'
 
         #Check logout
         client.get('/user/signout/')
