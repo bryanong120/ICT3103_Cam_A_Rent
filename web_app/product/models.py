@@ -48,6 +48,7 @@ class Product:
                         "dayPrice": request.form.get('dayPrice'),
                         "weekPrice": request.form.get('weekPrice'),
                         "monthPrice": request.form.get('monthPrice'),
+                        "initialDeposit": request.form.get('initialDeposit'),
                         "stock": request.form.get('stock'),
                         "category": request.form.get('category'),
                         "image_url": upload_result['secure_url'],
@@ -112,13 +113,13 @@ class Product:
     def homePageProduct(self):
         return db.Product.find(limit=9)
 
-    def viewProduct(self, productID: String):
+    def viewProduct(self, productID: str):
         # oid = ObjectId(productID)
         return db.Product.find_one({"_id": productID})
 
-    def viewProductUsername(self, productID: String):
+    def viewProductUsername(self, productID: str):
         product = db.Product.find_one({"_id": productID})
         return db.User.find_one({"_id": product["uid"]})
 
-    def searchProduct(self, searchText: String):
+    def searchProduct(self, searchText: str):
         return db.Product.find({"$text": {"$search": searchText}})

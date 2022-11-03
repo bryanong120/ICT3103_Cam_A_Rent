@@ -24,15 +24,15 @@
 				  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                     <button type="submit" class="btn btn-sm btn-outline-secondary" name="delObjID" id="delObjID"
                     value="{{item._id}}">Delete</button>
-                  </form>
-                </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
-        {% endfor %}
       </div>
+      {% endfor %}
     </div>
   </div>
+</div>
 
 {%endblock%}
