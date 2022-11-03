@@ -20,13 +20,13 @@ stages {
     }
 	steps {
 		sh '''#!/bin/bash
-		echo "hello world"
-		python3 --version 
+		cd web_app		
 		pytest
 		python3 -m pylint --output-format=parseable --fail-under=3.0 ./web_app --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" | tee pylint.log || echo "pylint exited with $?"
 		'''
 		//pip3 install --no-cache-dir -r requirements.txt --user
 		//input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+		//cp .env.example .env - creating a .env file for jenkins to test on, might need to change directory in jenkins
 	}
 	}
 	// stage('Deploy')
