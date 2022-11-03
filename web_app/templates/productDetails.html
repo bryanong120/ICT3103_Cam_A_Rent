@@ -47,6 +47,7 @@
                             </div>
                         </div>
                         <form action="/user/deposit" method="POST">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                             <div class="d-flex justify-content-between total font-weight-bold mt-4">
                                 <button type="submit" class="btn btn-sm btn-outline-secondary" name="depositPID"
                                     value="{{item._id}}">Deposit</button>
