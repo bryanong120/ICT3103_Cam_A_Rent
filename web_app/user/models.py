@@ -1,12 +1,11 @@
 from datetime import datetime
-from flask import jsonify, request, session, redirect, url_for, flash
+from flask import jsonify, request, session, redirect, url_for, flash, escape
 from passlib.hash import pbkdf2_sha256
 import uuid
 import re
 from db import db
 from tokenize import String
 from datetime import datetime
-from otpverify import requestPhoneOTP,checkPhoneOTP,requestEmailOTP,checkEmailOTP
 # status code 200 = OK request fulfilled
 # status code 400 = BAD request
 # status code 401 = Unauthorized entry
@@ -21,31 +20,39 @@ class User:
         return jsonify(user), 200
 
     def signup(self):
-        # input validation
-        # username validation
-        username = request.form.get('username')
-        if len(username) < 3:
-            # username 3 characters and above
+        username = escape(request.form.get('username'))
+        if len(username) < 3:   # username 3 characters and above
             return jsonify({"error": "Username must be at least 3 characters"}), 400
-        if re.match("^[a-zA-Z0-9_.-]+$", username) == None:
-            # username only allows alphanumeric and -, ., _ symbols
+        if re.match("^[a-zA-Z0-9_.-]+$", username) == None:  # username only allows alphanumeric and -, ., _ symbols
             return jsonify({"error": "Username can only include letters, numbers and . , -, _ but not special characters"}), 400
+        if db.User.find_one({"username": username}): #check for exsting username
+            return jsonify({"error": "Username already in use"}), 400
 
         # email validation
-        email = request.form.get('email')
+        email = escape(request.form.get('email'))
         if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
             return jsonify({"error": "Please input valid email"}), 400
+        # check for existing email
+        if db.User.find_one({"email": email}):
+            return jsonify({"error": "Email address already in use"}), 400
+
 
         # password validation
-        password = request.form.get('password')
+        password = escape(request.form.get('password'))
         if len(password) == 0:
             return jsonify({"error": "Password cannot be empty"}), 400
-            
-        # phone number validation    
-        phonenumber = request.form.get('phonenumber')
-        phonenumber = phonenumber.replace(' ','')
-        if re.match("\+[\d]+$", phonenumber) == None:
-            return jsonify({"error": "Please input valid phone number"}), 400
+            sssssssssss
+        if len(password) < 12:
+            return jsonify({"error": "Password should be at least 12 characters long"}), 400
+
+        if len(password) > 128:
+            return jsonify({"error": "Password cannot be longer than 128 characters"}), 400
+
+        if username in password:
+            return jsonify({"error": "Password cannot contain your username"}), 400
+
+        # create the user objectusername = escape(request.form.get('username'))
+
 
         # create the user object
         user = {
@@ -53,17 +60,14 @@ class User:
             "username": username,
             "email": email,
             "password": password,
-            "phonenumber": phonenumber,
+        #    "failed_logins": 0
             "virtualCredit": 1000
         }
 
         # encrypt the password
         user['password'] = pbkdf2_sha256.encrypt(user['password'])
 
-        # check for existing email
-        if db.User.find_one({"email": user['email']}):
-            return jsonify({"error": "Email address already in use"}), 400
-            
+       
         # insert user if there is no existing email
         if db.User.insert_one(user):
             return self.start_session(user)
@@ -79,16 +83,26 @@ class User:
         # check for user email in db and if password matches
 
         # login user validation
-        login_email = request.form.get('email')
+        login_email = escape(request.form.get('email'))
+        
         if re.match("^[a-zA-Z0-9@_.-]+$", login_email) == None:
             return jsonify({"error": "Please input a valid email"}), 400
-
+            
         user = db.User.find_one({"email": login_email})
+
+        #if user['failed_logins'] == 5 :
+        #    return jsonify({"error": "Too many failed attempts" }), 401
 
         ## request.form.get('password') is un-encrypted
         ## user['password'] is encrypted
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
             return self.start_session(user)
+
+        # db.User.update_one(
+        #    {'email': request.form.get('email')},
+        #    {'$inc': 
+        #        {'failed_logins': 1}}
+        #)
 
         return jsonify({"error": "Invalid login credentials"}), 401
 
@@ -142,18 +156,3 @@ class User:
             }
             db.Deposit.insert_one(deposit)
             
-        
-    def sendPhoneOTP(self,user):
-        phonenumber = request.form.get('phonenumber')
-        phonenumber = phonenumber.replace(' ','')
-        if re.match("\+[\d]+$", phonenumber) == None:
-            return jsonify({"error": "Please input valid phone number"}), 400
-            
-        requestPhoneOTP(phone)
-        
-    def sendEmailOTP(self,user):
-        email = request.form.get('email')
-        if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
-            return jsonify({"error": "Please input valid email"}), 400
-            
-        requestEmailOTP(email)

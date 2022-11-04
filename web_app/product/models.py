@@ -1,7 +1,8 @@
+from flask import jsonify, request, session, redirect, url_for, flash, escape
 import os
-from flask import jsonify, request, session, redirect, url_for, flash
 import uuid
 from db import db
+import re
 from tokenize import String
 import cloudinary as cloud
 import cloudinary.uploader
@@ -41,14 +42,17 @@ class Product:
                 if file.filename == '':
                     flash('No image selected for uploading')
                     return redirect(url_for("user_bp.uploadListing"))
-
                 # check if image file is in acceptable format png, jpeg, jpg
                 if file and allowed_file(file.filename):
-                    upload_result = cloud.uploader.upload(file)
+                    try:
+                        upload_result = cloud.uploader.upload(file)
+                    except Exception as e:
+                        flash(e) # displays cloudinary.execeptions.error
+                        return redirect(url_for("user_bp.uploadListing"))
                     product = {
                         "_id": uuid.uuid4().hex,
                         "uid": session['user']['_id'],
-                        "title": request.form.get('title'),
+                        "title": escape(request.form.get('title')),
                         "dayPrice": request.form.get('dayPrice'),
                         "weekPrice": request.form.get('weekPrice'),
                         "monthPrice": request.form.get('monthPrice'),
@@ -56,7 +60,7 @@ class Product:
                         "stock": request.form.get('stock'),
                         "category": request.form.get('category'),
                         "image_url": upload_result['secure_url'],
-                        "description": (request.form.get('description')).strip()
+                        "description": escape((request.form.get('description')).strip())
                     }
                     db.Product.insert_one(product)
                     flash('Image successfully uploaded')
@@ -76,13 +80,13 @@ class Product:
                 if file.filename == '':
                     product = {"$set":
                                {
-                                   "title": request.form.get('title'),
+                                   "title": escape(request.form.get('title')),
                                    "dayPrice": request.form.get('dayPrice'),
                                    "weekPrice": request.form.get('weekPrice'),
                                    "monthPrice": request.form.get('monthPrice'),
                                    "stock": request.form.get('stock'),
                                    "category": request.form.get('category'),
-                                   "description": (request.form.get('description')).strip()
+                                   "description": escape((request.form.get('description')).strip())
                                }
                                }
                     db.Product.update_one(filter, product)
@@ -94,14 +98,14 @@ class Product:
                         upload_result = cloud.uploader.upload(file)
                         product = {"$set":
                                    {
-                                       "title": request.form.get('title'),
+                                       "title": escape(request.form.get('title')),
                                        "dayPrice": request.form.get('dayPrice'),
                                        "weekPrice": request.form.get('weekPrice'),
                                        "monthPrice": request.form.get('monthPrice'),
                                        "stock": request.form.get('stock'),
                                        "category": request.form.get('category'),
                                        "image_url": upload_result['secure_url'],
-                                       "description": (request.form.get('description')).strip()
+                                       "description": escape((request.form.get('description')).strip())
                                    }
                                    }
                         db.Product.update_one(filter, product)
