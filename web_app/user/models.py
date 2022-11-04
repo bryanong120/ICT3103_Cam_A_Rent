@@ -91,20 +91,29 @@ class User:
         user = db.User.find_one({"email": login_email})
 
         if (user['failed_logins'] == 5) and (datetime.utcnow() < user['last_failed'] + timedelta(minutes=5)):
+            print(user['last_failed'])
             return jsonify({"error": "Too many failed attempts, please wait 5 minutes before attempting" }), 401
 
         ## request.form.get('password') is un-encrypted
         ## user['password'] is encrypted
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
-            user.update_one({'failed_logins': 0})
+            db.User.update_one(
+                {'email': request.form.get('email')},
+                {'$set':
+                    {'failed_logins': 0}}
+                    )
             return self.start_session(user)
 
         db.User.update_one(
             {'email': request.form.get('email')},
-            {'$inc': 
-                {'failed_logins': 1}},
+            {
+            '$inc': 
+                {'failed_logins': 1},
+            '$set': 
                 {'last_failed': datetime.utcnow()}
+            }
         )
+        
 
         return jsonify({"error": "Invalid login credentials"}), 401
 
