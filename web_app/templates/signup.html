@@ -15,6 +15,18 @@
             <input type="email" name="email" class="form-control" id="floatingEmailInput" placeholder="Email">
             <label for="floatingEmailInput">Email</label>
           </div>
+		  <div class="form-floating">
+            <input type="text" name="emailotp" class="form-control" id="floatingEmailOTP" placeholder="3455433">
+            <label for="floatingPhoneNumber">Email OTP</label>
+          </div>
+		  <div class="form-floating">
+            <input type="text" name="phonenumber" class="form-control" id="floatingPhoneNumber" placeholder="+65 1234 5678">
+            <label for="floatingPhoneNumber">Phone Number</label>
+          </div>
+		  <div class="form-floating">
+            <input type="text" name="phoneotp" class="form-control" id="floatingPhoneOTP" placeholder="3455433">
+            <label for="floatingPhoneNumber">Phone OTP</label>
+          </div>
           <div class="form-floating">
             <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Password</label>
@@ -22,6 +34,13 @@
           <p class="error error--hidden"></p>
           <button class="w-100 btn btn-lg btn-primary" type="submit">Sign Up</button>
         </form>
+		<form name="phoneotp_form" action="/user/sendPhoneOTP" method="post">
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Get Phone OTP</button>
+		</form>
+		<form name="emailotp_form" action="/user/sendEmailOTP" method="post">
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Get Email OTP</button>
+		</form>
+		
       </main>
   </div>
 </div>

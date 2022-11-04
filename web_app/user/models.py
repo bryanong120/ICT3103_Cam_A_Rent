@@ -6,6 +6,7 @@ import re
 from db import db
 from tokenize import String
 from datetime import datetime
+from otpverify import requestPhoneOTP,checkPhoneOTP,requestEmailOTP,checkEmailOTP
 # status code 200 = OK request fulfilled
 # status code 400 = BAD request
 # status code 401 = Unauthorized entry
@@ -39,6 +40,12 @@ class User:
         password = request.form.get('password')
         if len(password) == 0:
             return jsonify({"error": "Password cannot be empty"}), 400
+            
+        # phone number validation    
+        phonenumber = request.form.get('phonenumber')
+        phonenumber = phonenumber.replace(' ','')
+        if re.match("\+[\d]+$", phonenumber) == None:
+            return jsonify({"error": "Please input valid phone number"}), 400
 
         # create the user object
         user = {
@@ -46,6 +53,7 @@ class User:
             "username": username,
             "email": email,
             "password": password,
+            "phonenumber": phonenumber,
             "virtualCredit": 1000
         }
 
@@ -55,7 +63,7 @@ class User:
         # check for existing email
         if db.User.find_one({"email": user['email']}):
             return jsonify({"error": "Email address already in use"}), 400
-
+            
         # insert user if there is no existing email
         if db.User.insert_one(user):
             return self.start_session(user)
@@ -134,3 +142,18 @@ class User:
             }
             db.Deposit.insert_one(deposit)
             
+        
+    def sendPhoneOTP(self,user):
+        phonenumber = request.form.get('phonenumber')
+        phonenumber = phonenumber.replace(' ','')
+        if re.match("\+[\d]+$", phonenumber) == None:
+            return jsonify({"error": "Please input valid phone number"}), 400
+            
+        requestPhoneOTP(phone)
+        
+    def sendEmailOTP(self,user):
+        email = request.form.get('email')
+        if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
+            return jsonify({"error": "Please input valid email"}), 400
+            
+        requestEmailOTP(email)

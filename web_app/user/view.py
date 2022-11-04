@@ -8,9 +8,18 @@ user_bp = Blueprint("user_bp", __name__,
                     static_folder='static', template_folder='templates')
 
 
+    
 @user_bp.route("/signup/", methods=['POST'])
 def signup():
     return User().signup()
+    
+@user_bp.route("/sendPhoneOTP/", methods=['POST'])
+def sendPhoneOTP():
+    return User().sendPhoneOTP()
+    
+@user_bp.route("/sendEmailOTP/", methods=['POST'])
+def sendEmailOTP():
+    return User().sendEmailOTP()
 
 
 @user_bp.route("/login/", methods=['POST'])
@@ -22,7 +31,7 @@ def login():
 def signout():
     return User().signout()
 
-
+    
 @user_bp.route("/dashboard/", methods=['GET', 'POST'])
 @login_required
 def dashboardPage():

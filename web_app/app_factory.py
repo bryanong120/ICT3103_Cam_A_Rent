@@ -18,7 +18,6 @@ csrf.init_app(app)
 
 # routes
 
-
 @ app.route("/signup/", methods=['GET'])
 def signupPage():
     return render_template('signup.html')
