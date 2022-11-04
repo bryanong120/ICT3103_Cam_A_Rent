@@ -106,7 +106,7 @@ class User:
                 {'last_failed': datetime.utcnow()}
         )
 
-        return jsonify({"error": "Invalid login credentials, you have " 5-user['failed_logins'] " tries left"}), 401
+        return jsonify({"error": "Invalid login credentials"}), 401
 
     def viewListing(self):
         if session['logged_in'] :
