@@ -11,7 +11,13 @@ user_bp = Blueprint("user_bp", __name__,
     
 @user_bp.route("/signup/", methods=['POST'])
 def signup():
-    return User().signup()
+    if request.form.get('sendphoneotp') == 'sendphoneotop':
+        return User().sendPhoneOTP()
+    elif request.form.get('sendemailotp') == 'sendemailotp':
+        return User().sendEmailOTP()
+    else:
+        return User().sendhelp()
+    #return User().signup()
     
 @user_bp.route("/sendPhoneOTP/", methods=['POST'])
 def sendPhoneOTP():

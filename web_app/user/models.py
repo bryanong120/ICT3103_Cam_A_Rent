@@ -36,6 +36,11 @@ class User:
         if db.User.find_one({"email": email}):
             return jsonify({"error": "Email address already in use"}), 400
 
+        # phone number validation
+        phonenumber = escape(request.form.get('phonenumber'))
+        phonenumber = phonenumber.replace(' ','')
+        if re.match("^\+[\d]+$", phonenumber) == None:
+            return jsonify({"error": "Please input valid phone number"}), 400
 
         # password validation
         password = escape(request.form.get('password'))
@@ -59,8 +64,9 @@ class User:
             "_id": uuid.uuid4().hex,
             "username": username,
             "email": email,
+            "phonenumber": phonenumber,
             "password": password,
-        #    "failed_logins": 0
+        #    "failed_logins": 0,
             "virtualCredit": 1000
         }
 
@@ -156,3 +162,29 @@ class User:
             }
             db.Deposit.insert_one(deposit)
             
+    def sendPhoneOTP(self):
+        # phone number validation
+        phonenumber = escape(request.form.get('phonenumber'))
+        phonenumber = phonenumber.replace(' ','')
+        if re.match("^\+[\d]+$", phonenumber) == None:
+            return jsonify({"error": "Please input valid phone number"}), 400
+        
+        return jsonify({"error": phonenumber}), 400
+        #requestPhoneOTP(phonenumber)
+        
+    def sendEmailOTP(self):
+        # email validation
+        email = escape(request.form.get('email'))
+        if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
+            return jsonify({"error": "Please input valid email"}), 400
+        # check for existing email
+        if db.User.find_one({"email": email}):
+            return jsonify({"error": "Email address already in use"}), 400
+        
+        return jsonify({"error": email}), 400
+        #requestEmailOTP(email)
+        
+    def sendhelp(self):
+        phonenumber = str(request.form)
+        return jsonify({"error": phonenumber}), 400
+        
