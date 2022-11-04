@@ -7,14 +7,22 @@ stages {
 			agent any 
 		steps {
 			sh 'echo "building the repo"'
-			dependencyCheck additionalArguments: '', odcInstallation: 'default'
-        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+		// 	dependencyCheck additionalArguments: '', odcInstallation: 'default'
+        // dependencyCheckPublisher pattern: 'dependency-check-report.xml'`
 		}
+		}
+		stage('Dependency Check'){
+			agent any 
+		steps {
+			sh 'echo "Dependency Check"'
+			dependencyCheck additionalArguments: '', odcInstallation: 'default'
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'`
+		}	
 		}
 	// }
 	//}
 
-	stage('Test') {
+	stage('Unit Test and warnings') {
 		    agent {
         dockerfile { filename 'Dockerfile.Jenkins' }
     }
