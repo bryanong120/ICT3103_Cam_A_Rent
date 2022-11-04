@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import jsonify, request, session, redirect, url_for, flash
+from flask import jsonify, request, session, redirect, url_for, flash, escape
 from passlib.hash import pbkdf2_sha256
 import uuid
 import re
@@ -20,27 +20,31 @@ class User:
         return jsonify(user), 200
 
     def signup(self):
-        # input validation
+        # input validation#+ os.urandom(100) value of session cookie is user + random bytes encrypted with secret key
         # username validation
-        username = request.form.get('username')
-        if len(username) < 3:
-            # username 3 characters and above
+        username = escape(request.form.get('username'))
+        if len(username) < 3:   # username 3 characters and above
             return jsonify({"error": "Username must be at least 3 characters"}), 400
-        if re.match("^[a-zA-Z0-9_.-]+$", username) == None:
-            # username only allows alphanumeric and -, ., _ symbols
+        if re.match("^[a-zA-Z0-9_.-]+$", username) == None:  # username only allows alphanumeric and -, ., _ symbols
             return jsonify({"error": "Username can only include letters, numbers and . , -, _ but not special characters"}), 400
+        if db.User.find_one({"username": username}): #check for exsting username
+            return jsonify({"error": "Username already in use"}), 400
 
         # email validation
-        email = request.form.get('email')
+        email = escape(request.form.get('email'))
         if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
             return jsonify({"error": "Please input valid email"}), 400
+        # check for existing email
+        if db.User.find_one({"email": email}):
+            return jsonify({"error": "Email address already in use"}), 400
+
 
         # password validation
-        password = request.form.get('password')
+        password = escape(request.form.get('password'))
         if len(password) == 0:
             return jsonify({"error": "Password cannot be empty"}), 400
 
-        # create the user object
+        # create the user objectusername = escape(request.form.get('username'))
         user = {
             "_id": uuid.uuid4().hex,
             "username": username,
@@ -52,10 +56,7 @@ class User:
         # encrypt the password
         user['password'] = pbkdf2_sha256.encrypt(user['password'])
 
-        # check for existing email
-        if db.User.find_one({"email": user['email']}):
-            return jsonify({"error": "Email address already in use"}), 400
-
+       
         # insert user if there is no existing email
         if db.User.insert_one(user):
             return self.start_session(user)
@@ -71,7 +72,7 @@ class User:
         # check for user email in db and if password matches
 
         # login user validation
-        login_email = request.form.get('email')
+        login_email = escape(request.form.get('email'))
         if re.match("^[a-zA-Z0-9@_.-]+$", login_email) == None:
             return jsonify({"error": "Please input a valid email"}), 400
 
