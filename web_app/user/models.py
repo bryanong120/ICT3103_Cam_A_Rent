@@ -53,7 +53,7 @@ class User:
             "username": username,
             "email": email,
             "password": password,
-            "failed_logins": 0
+        #    "failed_logins": 0
         }
 
         # encrypt the password
@@ -84,13 +84,19 @@ class User:
             
         user = db.User.find_one({"email": login_email})
 
+        #if user['failed_logins'] == 5 :
+        #    return jsonify({"error": "Too many failed attempts" }), 401
+
         ## request.form.get('password') is un-encrypted
         ## user['password'] is encrypted
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
             return self.start_session(user)
 
-        elif user and not(pbkdf2_sha256.verify(request.form.get('password'), user['password'])):
-            return jsonify({"error": "Testing"}), 401
+        # db.User.update_one(
+        #    {'email': request.form.get('email')},
+        #    {'$inc': 
+        #        {'failed_logins': 1}}
+        #)
 
         return jsonify({"error": "Invalid login credentials"}), 401
 
