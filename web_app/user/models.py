@@ -41,7 +41,7 @@ class User:
         password = escape(request.form.get('password'))
         if len(password) == 0:
             return jsonify({"error": "Password cannot be empty"}), 400
-            sssssssssss
+            
         if len(password) < 12:
             return jsonify({"error": "Password should be at least 12 characters long"}), 400
 
