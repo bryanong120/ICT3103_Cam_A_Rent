@@ -102,7 +102,7 @@ class User:
         db.User.update_one(
             {'email': request.form.get('email')},
             {'$inc': 
-                {'failed_logins': 1}}
+                {'failed_logins': 1}},
                 {'last_failed': datetime.utcnow()}
         )
 
