@@ -1,11 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import jsonify, request, session, redirect, url_for, flash
 from passlib.hash import pbkdf2_sha256
 import uuid
 import re
 from db import db
 from tokenize import String
-from datetime import datetime
 # status code 200 = OK request fulfilled
 # status code 400 = BAD request
 # status code 401 = Unauthorized entry
@@ -55,8 +54,9 @@ class User:
             "username": username,
             "email": email,
             "password": password,
-        #    "failed_logins": 0
             "virtualCredit": 1000
+            "failed_logins": 0,
+            "last_failed": datetime.utcnow()
         }
 
         # encrypt the password
@@ -87,21 +87,23 @@ class User:
             
         user = db.User.find_one({"email": login_email})
 
-        #if user['failed_logins'] == 5 :
-        #    return jsonify({"error": "Too many failed attempts" }), 401
+        if (user['failed_logins'] == 5) and (datetime.utcnow() < user['last_failed'] + timedelta(minutes=5)):
+            return jsonify({"error": "Too many failed attempts, please wait 5 minutes before attempting" }), 401
 
         ## request.form.get('password') is un-encrypted
         ## user['password'] is encrypted
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
+            user.update_one({'failed_logins': 0})
             return self.start_session(user)
 
-        # db.User.update_one(
-        #    {'email': request.form.get('email')},
-        #    {'$inc': 
-        #        {'failed_logins': 1}}
-        #)
+        db.User.update_one(
+            {'email': request.form.get('email')},
+            {'$inc': 
+                {'failed_logins': 1}}
+                {'last_failed': datetime.utcnow()}
+        )
 
-        return jsonify({"error": "Invalid login credentials"}), 401
+        return jsonify({"error": "Invalid login credentials, you have " 5-user['failed_logins'] " tries left"}), 401
 
     def viewListing(self):
         if session['logged_in'] :
