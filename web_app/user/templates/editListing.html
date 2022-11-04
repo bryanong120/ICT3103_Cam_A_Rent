@@ -1,0 +1,73 @@
+{%extends "index.html"%}
+{%block content%} 
+<link href="/user/static/css/uploadListing.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<div class="card-wrapper">
+    <div class="card">
+        {% for item in single_product%}
+        <form method="post" action="{{url_for('user_bp.updateListing', id=item._id)}}" enctype="multipart/form-data">
+            {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+            {% endfor %} {% endif %} {% endwith %}
+            <h1 class="h3 mb-3 fw-normal">Update Product</h1>
+            <dl>
+                <p>
+                    <label for="imageInput">Choose Image</label>
+                    <input type="file" name="file" accept="image/*" class="form-control" autocomplete="off">
+                </p>
+            </dl>
+            <d2>
+                <p>
+                    <label for="titleInput">Listing Title</label>
+                    <input type="text" name="title" class="form-control" id="titleInput" value="{{item.title}}" required>
+                </p>
+            </d2>
+            <d3>
+                <p>
+                    <label for="priceInput1">Price For a day</label>
+                    <input type="number" name="dayPrice" class="form-control" id="priceInput1" value="{{item.dayPrice}}" required>
+                </p>
+            </d3>
+            <d4>
+                <p>
+                    <label for="priceInput2">Price For a week</label>
+                    <input type="number" name="weekPrice" class="form-control" id="priceInput2" value="{{item.weekPrice}}" required>
+                </p>
+            </d4>
+            <d5>
+                <p>
+                    <label for="priceInput3">Price For a month</label>
+                    <input type="number" name="monthPrice" class="form-control" id="priceInput3" value="{{item.monthPrice}}" required>
+                </p>
+            </d5>
+            <d6>
+                <p>
+                    <label for="stockInput">Stock</label>
+                    <input type="number" name="stock" class="form-control" id="titleInput" value="{{item.stock}}" required> 
+                </p>
+            </d6>
+            <d7>
+                <p>
+                    <label for="categorySelect">Select category</label>
+                    <select class="form-control" name="category" id="categorySelect" required>
+                        <option value="DSLR"{%if item.category == "DSLR" %} selected="selected" {% endif %}>DSLR Cameras</option>
+                        <option value="Instant"{%if item.category == "Instant" %} selected="selected" {% endif %}>Instant Cameras</option>
+                        <option value="Flim"{%if item.category == "Flim" %} selected="selected" {% endif %}>Flim Cameras</option>
+                        <option value="Compact"{%if item.category == "Compact" %} selected="selected" {% endif %}>Compact Cameras</option>
+                    </select>
+                </p>
+            </d7>
+            <d8>
+                <p>
+                    <label for="descriptionInput">Description</label>
+                    <textarea class="form-control" name="description" id="descriptionInput" rows="4" value="{{item.description}}" required>{{item.description}}</textarea>
+                </p>
+            </d8>
+            <p>
+                <button class="w-100 btn btn-info" type="submit" name="updateObjID" id="updateObjID" value="{{item._id}}">UPDATE </button>
+            </p>
+        </form>
+        {% endfor %}
+    </div>
+</div>
+{%endblock%}
