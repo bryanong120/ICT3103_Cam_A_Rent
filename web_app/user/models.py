@@ -20,32 +20,42 @@ class User:
         return jsonify(user), 200
 
     def signup(self):
-        # input validation
-        # username validation
-        username = request.form.get('username')
+    	#input validation
+        #username validation
+        username =  request.form.get('username')
         if len(username) < 3:
-            # username 3 characters and above
-            return jsonify({"error": "Username must be at least 3 characters"}), 400
+            return jsonify({"error": "Username must be at least 3 characters"}), 400 #username 3 characters and above
         if re.match("^[a-zA-Z0-9_.-]+$", username) == None:
-            # username only allows alphanumeric and -, ., _ symbols
-            return jsonify({"error": "Username can only include letters, numbers and . , -, _ but not special characters"}), 400
+            return jsonify({"error": "Username can only include letters, numbers and . , -, _ but not special characters"}), 400 #username only allows alphanumeric and -, ., _ symbols
 
-        # email validation
+        #email validation
         email = request.form.get('email')
         if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
             return jsonify({"error": "Please input valid email"}), 400
-
-        # password validation
+        
+        #password validation
         password = request.form.get('password')
         if len(password) == 0:
             return jsonify({"error": "Password cannot be empty"}), 400
 
+        if len(password) < 12:
+            return jsonify({"error": "Password should be at least 12 characters long"}), 400
+
+        if len(password) > 128:
+            return jsonify({"error": "Password cannot be longer than 128 characters"}), 400
+
+        if username in password:
+            return jsonify({"error": "Password cannot contain your username"}), 400
+
+
+            
         # create the user object
         user = {
             "_id": uuid.uuid4().hex,
             "username": username,
             "email": email,
             "password": password,
+        #    "failed_logins": 0
             "virtualCredit": 1000
         }
 
@@ -69,18 +79,27 @@ class User:
 
     def login(self):
         # check for user email in db and if password matches
-
-        # login user validation
+        
+        #login user validation
         login_email = request.form.get('email')
         if re.match("^[a-zA-Z0-9@_.-]+$", login_email) == None:
             return jsonify({"error": "Please input a valid email"}), 400
-
+            
         user = db.User.find_one({"email": login_email})
+
+        #if user['failed_logins'] == 5 :
+        #    return jsonify({"error": "Too many failed attempts" }), 401
 
         ## request.form.get('password') is un-encrypted
         ## user['password'] is encrypted
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
             return self.start_session(user)
+
+        # db.User.update_one(
+        #    {'email': request.form.get('email')},
+        #    {'$inc': 
+        #        {'failed_logins': 1}}
+        #)
 
         return jsonify({"error": "Invalid login credentials"}), 401
 
