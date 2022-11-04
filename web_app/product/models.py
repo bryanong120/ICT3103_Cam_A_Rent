@@ -1,3 +1,4 @@
+import os
 from flask import jsonify, request, session, redirect, url_for, flash
 import uuid
 from db import db
@@ -5,12 +6,15 @@ from tokenize import String
 import cloudinary as cloud
 import cloudinary.uploader
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # cloudinary
 cloud.config(
-    cloud_name="ds5ib7aij",
-    api_key="867155213339131",
-    api_secret="yt-vTKEI9Ad0p-fsI5emvfSqudE"
+    cloud_name=os.getenv('cloud_name'),
+    api_key=os.getenv('api_key'),
+    api_secret=os.getenv('api_secret')
 )
 
 UPLOAD_FOLDER = 'product/UPLOAD_FOLDER'
@@ -48,6 +52,7 @@ class Product:
                         "dayPrice": request.form.get('dayPrice'),
                         "weekPrice": request.form.get('weekPrice'),
                         "monthPrice": request.form.get('monthPrice'),
+                        "initialDeposit": request.form.get('initialDeposit'),
                         "stock": request.form.get('stock'),
                         "category": request.form.get('category'),
                         "image_url": upload_result['secure_url'],
@@ -112,13 +117,13 @@ class Product:
     def homePageProduct(self):
         return db.Product.find(limit=9)
 
-    def viewProduct(self, productID: String):
+    def viewProduct(self, productID: str):
         # oid = ObjectId(productID)
         return db.Product.find_one({"_id": productID})
 
-    def viewProductUsername(self, productID: String):
+    def viewProductUsername(self, productID: str):
         product = db.Product.find_one({"_id": productID})
         return db.User.find_one({"_id": product["uid"]})
 
-    def searchProduct(self, searchText: String):
+    def searchProduct(self, searchText: str):
         return db.Product.find({"$text": {"$search": searchText}})

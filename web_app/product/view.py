@@ -13,7 +13,7 @@ def viewAllProduct():
 
 @product_bp.route('/search/', methods=['POST', 'GET'])
 def search():
-    # search_Text = request.form("searchText")
-    search_Text = request.args.get("searchText")
+    search_Text = request.form["searchText"]
+    # search_Text = request.args.get("searchText")
     searched_Product = Product().searchProduct(search_Text)
     return render_template("allProductView.html", product=list(searched_Product))

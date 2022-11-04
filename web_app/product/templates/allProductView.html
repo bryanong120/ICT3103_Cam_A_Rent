@@ -15,10 +15,11 @@
     </section>
     <div class="album py-5 bg-light">
         <div class="container">
-                <form action="/product/search/" method="POST" class="d-flex mt-3">
+                <form action="/product/search/" method="POST" class="d-flex mt-3">					
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchText"
                         id="searchText">
                     <button class="btn btn-success" type="submit">Search</button>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 </form>
             <p>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -32,6 +33,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <form action="/" method="POST">
+										<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                         <button type="submit" class="btn btn-sm btn-outline-secondary" name="objectID"
                                             id="objectID" value="{{item._id}}">View</button>
                                     </form>

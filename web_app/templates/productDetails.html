@@ -2,14 +2,24 @@
 {%block content%}
 <section style="background-color: #eee;">
     <div class="container py-5">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="d-flex justify-content-between">
+        <ul>
+            {% for message in messages %}
+            <span>Message:</span><span><b>{{message}}</b></span>
+            {% endfor %}
+        </ul> 
+    {%endif%}
+    {%endwith%}
+    </div>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6 col-xl-4">
                 <div class="card text-black">
                     {% for item in single_product %}
                     {% for i in single_username%}
                     <i class="fab fa-apple fa-lg pt-3 pb-1 px-3"></i>
-                    <img src="{{ item.image_url }}"
-                        class="card-img-top"/>
+                    <img src="{{ item.image_url }}" class="card-img-top" />
                     <div class="card-body">
                         <div class="text-center">
                             <h5 class="card-title">{{item.title}}</h5>
@@ -27,15 +37,22 @@
                                 <span>Month Price: </span><span>${{item.monthPrice}}</span>
                             </div>
                             <div class="d-flex justify-content-between">
+                                <span>InitialDeposit: </span><span>${{item.initialDeposit}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
                                 <span>Stock: </span><span>{{item.stock}}</span>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <span>Owned by: </span><span>{{i.username}}</span>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between total font-weight-bold mt-4">
-                            <button type="submit" class="btn btn-sm btn-outline-secondary">Deposit</button>
-                        </div>
+                        <form action="/user/deposit" method="POST">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <div class="d-flex justify-content-between total font-weight-bold mt-4">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary" name="depositPID"
+                                    value="{{item._id}}">Deposit</button>
+                            </div>
+                        </form>
                         {% endfor %}
                         {% endfor %}
                     </div>
