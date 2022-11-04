@@ -49,10 +49,12 @@ class Product:
                     except Exception as e:
                         flash(e) # displays cloudinary.execeptions.error
                         return redirect(url_for("user_bp.uploadListing"))
+                    title0 = escape(request.form.get('title'))
+                    description0 = escape(request.form.get('description'))
                     product = {
                         "_id": uuid.uuid4().hex,
                         "uid": session['user']['_id'],
-                        "title": escape(request.form.get('title')),
+                        "title": title0,
                         "dayPrice": request.form.get('dayPrice'),
                         "weekPrice": request.form.get('weekPrice'),
                         "monthPrice": request.form.get('monthPrice'),
@@ -60,7 +62,7 @@ class Product:
                         "stock": request.form.get('stock'),
                         "category": request.form.get('category'),
                         "image_url": upload_result['secure_url'],
-                        "description": escape((request.form.get('description')).strip())
+                        "description": description0.strip()
                     }
                     db.Product.insert_one(product)
                     flash('Image successfully uploaded')
@@ -78,15 +80,17 @@ class Product:
             if request.method == "POST":
                 file = request.files['file']
                 if file.filename == '':
+                    title1 = escape(request.form.get('title'))
+                    description1 = escape(request.form.get('description'))
                     product = {"$set":
                                {
-                                   "title": escape(request.form.get('title')),
+                                   "title": title1,
                                    "dayPrice": request.form.get('dayPrice'),
                                    "weekPrice": request.form.get('weekPrice'),
                                    "monthPrice": request.form.get('monthPrice'),
                                    "stock": request.form.get('stock'),
                                    "category": request.form.get('category'),
-                                   "description": escape((request.form.get('description')).strip())
+                                   "description": description1.strip()
                                }
                                }
                     db.Product.update_one(filter, product)
@@ -95,19 +99,24 @@ class Product:
                 else:
                     # check if image file is in acceptable format png, jpeg, jpg
                     if file and allowed_file(file.filename):
-                        upload_result = cloud.uploader.upload(file)
+                        try:
+                            upload_result = cloud.uploader.upload(file)
+                        except Exception as err:
+                            flash(err) # displays cloudinary.execeptions.error
+                        title2 = escape(request.form.get('title'))
+                        description2 = escape(request.form.get('description'))
                         product = {"$set":
-                                   {
-                                       "title": escape(request.form.get('title')),
+                                    {
+                                       "title": title2,
                                        "dayPrice": request.form.get('dayPrice'),
                                        "weekPrice": request.form.get('weekPrice'),
                                        "monthPrice": request.form.get('monthPrice'),
                                        "stock": request.form.get('stock'),
                                        "category": request.form.get('category'),
                                        "image_url": upload_result['secure_url'],
-                                       "description": escape((request.form.get('description')).strip())
+                                       "description": description2.strip()
                                    }
-                                   }
+                        }
                         db.Product.update_one(filter, product)
                         flash('Image successfully uploaded')
                         return redirect(url_for("user_bp.updateListing"))
