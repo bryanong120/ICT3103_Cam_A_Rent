@@ -46,6 +46,9 @@ class User:
         if username in password:
             return jsonify({"error": "Password cannot contain your username"}), 400
 
+        if email in password:
+            return jsonify({"error": "Password cannot contain your email"}), 400
+
 
             
         # create the user object
@@ -54,7 +57,7 @@ class User:
             "username": username,
             "email": email,
             "password": password,
-            "virtualCredit": 1000
+            "virtualCredit": 1000,
             "failed_logins": 0,
             "last_failed": datetime.utcnow()
         }
