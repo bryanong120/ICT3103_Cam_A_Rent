@@ -16,7 +16,7 @@ stages {
 		steps {
 			sh 'echo "Dependency Check"'
 			dependencyCheck additionalArguments: '', odcInstallation: 'default'
-        dependencyCheckPublisher pattern: 'dependency-check-report.xml'`
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
 		}	
 		}
 	// }
