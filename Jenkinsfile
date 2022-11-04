@@ -7,18 +7,31 @@ stages {
 			agent any 
 		steps {
 			sh 'echo "building the repo"'
+		// 	dependencyCheck additionalArguments: '', odcInstallation: 'default'
+        // dependencyCheckPublisher pattern: 'dependency-check-report.xml'`
+		}
+		}
+		stage('Dependency Check'){
+			agent any 
+		steps {
+			sh 'echo "Dependency Check"'
 			dependencyCheck additionalArguments: '', odcInstallation: 'default'
         dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-		}
+		}	
 		}
 	// }
 	//}
 
-	stage('Test') {
+	stage('Unit Test and warnings') {
 		    agent {
         dockerfile { filename 'Dockerfile.Jenkins' }
     }
 	steps {
+		sh "pwd"
+		dir("web_app"){
+			sh "cp .env.example .env"
+		}
+		sh "pwd"
 		sh '''#!/bin/bash
 		pytest
 		python3 -m pylint --output-format=parseable --fail-under=3.0 ./web_app --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" | tee pylint.log || echo "pylint exited with $?"
