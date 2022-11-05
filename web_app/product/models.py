@@ -74,7 +74,7 @@ class Product:
                         "description": description0.strip()
                     }
                     db.Product.insert_one(product)
-                    logging.info("%s has uploaded product id: %s , titled %s", session['user'], uuid.uuid4().hex, title0)
+                    logger.info("%s has uploaded product id: %s , titled %s", session['user']['username'], uuid.uuid4().hex, title0)
                     flash('Image successfully uploaded')
                     return redirect(url_for("user_bp.dashboardPage"))
                 else:
@@ -104,7 +104,7 @@ class Product:
                                }
                                }
                     db.Product.update_one(filter, product)
-                    logging.info("%s has updated product id: %s , titled %s", session['user'], uuid.uuid4().hex, title1)
+                    logger.info("%s has updated product id: %s, titled %s", session['user']['username'], uuid.uuid4().hex, title1)
                     flash('Successfully updated')
                     return redirect(url_for("user_bp.updateListing"))
                 else:
