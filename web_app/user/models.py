@@ -184,7 +184,4 @@ class User:
         return jsonify({"error": email}), 400
         #requestEmailOTP(email)
         
-    def sendhelp(self):
-        phonenumber = str(request.form)
-        return jsonify({"error": phonenumber}), 400
         
