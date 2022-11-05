@@ -11,7 +11,7 @@ def tests(client):
     with client:
         client.post("/user/login/", data = {
             "email": "2001011@sit.singaporetech.edu.sg",
-            "password" : "P@ssw0rd1"})
+            "password" : "P@ssw0rd1234"})
         
         #Check if login works
         assert session['logged_in'] == True
