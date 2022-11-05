@@ -8,6 +8,7 @@ import cloudinary as cloud
 import cloudinary.uploader
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
 
@@ -21,6 +22,13 @@ cloud.config(
 UPLOAD_FOLDER = 'product/UPLOAD_FOLDER'
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg", "gif"])
 
+logger = logging.getLogger('werkzeug') # grabs underlying WSGI logger
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler('user.log') # creates handler for the log file
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler) # adds handler to the werkzeug WSGI logger
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -31,6 +39,7 @@ class Product:
 
         # check if user is logged in
         if session['logged_in'] == True:
+
 
             # check request if it is POST
             if request.method == "POST":
@@ -65,6 +74,7 @@ class Product:
                         "description": description0.strip()
                     }
                     db.Product.insert_one(product)
+                    logging.info("%s has uploaded product id: %s , titled %s", session['user'], uuid.uuid4().hex, title0)
                     flash('Image successfully uploaded')
                     return redirect(url_for("user_bp.dashboardPage"))
                 else:
@@ -94,6 +104,7 @@ class Product:
                                }
                                }
                     db.Product.update_one(filter, product)
+                    logging.info("%s has updated product id: %s , titled %s", session['user'], uuid.uuid4().hex, title1)
                     flash('Successfully updated')
                     return redirect(url_for("user_bp.updateListing"))
                 else:
