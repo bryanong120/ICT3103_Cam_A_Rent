@@ -5,9 +5,18 @@ import uuid
 import re
 from db import db
 from tokenize import String
+import logging
+
 # status code 200 = OK request fulfilled
 # status code 400 = BAD request
 # status code 401 = Unauthorized entry
+logger = logging.getLogger('werkzeug') # grabs underlying WSGI logger
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler('user.log') # creates handler for the log file
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler) # adds handler to the werkzeug WSGI logger
 
 
 class User:
@@ -50,7 +59,6 @@ class User:
         if username in password:
             return jsonify({"error": "Password cannot contain your username"}), 400
 
-
         if email in password:
             return jsonify({"error": "Password cannot contain your email"}), 400
 
@@ -75,6 +83,7 @@ class User:
        
         # insert user if there is no existing email
         if db.User.insert_one(user):
+            logger.info("Username: %s and Email: %s created ", username, email)
             return self.start_session(user)
 
         # throw error
@@ -97,6 +106,7 @@ class User:
 
         if user:
             if (user['failed_logins'] == 5) and (datetime.utcnow() < user['last_failed'] + timedelta(minutes=5)):
+                logger.warning("%s has been locked for 5 minutes for too many failed attempts", login_email)
                 return jsonify({"error": "Too many failed attempts, please wait 5 minutes before attempting, any earlier than that will result in the lock timer resetting!" }), 401
 
             ## request.form.get('password') is un-encrypted
@@ -107,6 +117,7 @@ class User:
                     {'$set':
                         {'failed_logins': 0}}
                         )
+                logger.info("%s has logged in.", login_email)
                 return self.start_session(user)
 
             db.User.update_one(
@@ -118,7 +129,7 @@ class User:
                     {'last_failed': datetime.utcnow()}
                 }
             )
-
+            logger.info("%s has failed to login %d times.", login_email, user['failed_logins']+1)
             return jsonify({"error": "Invalid login credentials"}), 401
 
         return jsonify({"error": "Invalid login credentials"}), 401
