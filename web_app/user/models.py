@@ -92,7 +92,7 @@ class User:
 
         if user:
             if (user['failed_logins'] == 5) and (datetime.utcnow() < user['last_failed'] + timedelta(minutes=5)):
-                return jsonify({"error": "Too many failed attempts, please wait 5 minutes before attempting" }), 401
+                return jsonify({"error": "Too many failed attempts, please wait 5 minutes before attempting, any earlier than that will result in the lock timer resetting!" }), 401
 
             ## request.form.get('password') is un-encrypted
             ## user['password'] is encrypted
@@ -114,10 +114,6 @@ class User:
                 }
             )
 
-
-            # attempt_left = 5 - user['failed_logins']
-            # attempt_str = "Invalid login credentials, you have " + str(attempt_left) + " tries left."
-            #return jsonify({"error": attempt_str}), 401
             return jsonify({"error": "Invalid login credentials"}), 401
 
         return jsonify({"error": "Invalid login credentials"}), 401
