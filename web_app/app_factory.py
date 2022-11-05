@@ -5,26 +5,38 @@ from product.view import product_bp
 from product.models import Product
 from csrf import csrf
 from dotenv import load_dotenv
+from decorator import login_not_required
+from flask_session import Session
+from datetime import timedelta
 
 load_dotenv()
 
 app = Flask(__name__, instance_relative_config=False)
 
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
 app.config.update(
     TESTING=True,    
-    SECRET_KEY = os.getenv('SECRET_KEY_TESTING')
+    SECRET_KEY = os.getenv('SECRET_KEY_TESTING'),
+    SESSION_COOKIE_SECURE=True, # Makes sure cookies can only be sent on HTTPS
+    SESSION_COOKIE_HTTPONLY=True,# Mitigate client side scripts from accessing cookie
+    SESSION_COOKIE_SAMESITE='Lax', #CSRF prevention
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=30), # When Idle or not in use the session is set to expire in 30 mins
+    SESSION_PERMANENT = True, # if the user is still using the app, carry on.
+    SESSION_FILE_THRESHOLD = 100, # keeps up to 100 sessions before deleting some of it.
 )
+
 csrf.init_app(app)
 
-# routes
-
-
 @ app.route("/signup/", methods=['GET'])
+@login_not_required
 def signupPage():
     return render_template('signup.html')
 
 
 @ app.route("/login/", methods=['GET'])
+@login_not_required
 def loginPage():
     return render_template('login.html')
 

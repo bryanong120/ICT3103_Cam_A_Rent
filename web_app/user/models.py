@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from flask import jsonify, request, session, redirect, url_for, flash
+from flask import jsonify, request, session, redirect, url_for, flash, escape
 from passlib.hash import pbkdf2_sha256
 import uuid
 import re
@@ -19,24 +19,28 @@ class User:
         return jsonify(user), 200
 
     def signup(self):
-    	#input validation
-        #username validation
-        username =  request.form.get('username')
-        if len(username) < 3:
-            return jsonify({"error": "Username must be at least 3 characters"}), 400 #username 3 characters and above
-        if re.match("^[a-zA-Z0-9_.-]+$", username) == None:
-            return jsonify({"error": "Username can only include letters, numbers and . , -, _ but not special characters"}), 400 #username only allows alphanumeric and -, ., _ symbols
+        username = escape(request.form.get('username'))
+        if len(username) < 3:   # username 3 characters and above
+            return jsonify({"error": "Username must be at least 3 characters"}), 400
+        if re.match("^[a-zA-Z0-9_.-]+$", username) == None:  # username only allows alphanumeric and -, ., _ symbols
+            return jsonify({"error": "Username can only include letters, numbers and . , -, _ but not special characters"}), 400
+        if db.User.find_one({"username": username}): #check for exsting username
+            return jsonify({"error": "Username already in use"}), 400
 
-        #email validation
-        email = request.form.get('email')
+        # email validation
+        email = escape(request.form.get('email'))
         if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
             return jsonify({"error": "Please input valid email"}), 400
-        
-        #password validation
-        password = request.form.get('password')
+        # check for existing email
+        if db.User.find_one({"email": email}):
+            return jsonify({"error": "Email address already in use"}), 400
+
+
+        # password validation
+        password = escape(request.form.get('password'))
         if len(password) == 0:
             return jsonify({"error": "Password cannot be empty"}), 400
-
+            
         if len(password) < 12:
             return jsonify({"error": "Password should be at least 12 characters long"}), 400
 
@@ -46,11 +50,14 @@ class User:
         if username in password:
             return jsonify({"error": "Password cannot contain your username"}), 400
 
+
         if email in password:
             return jsonify({"error": "Password cannot contain your email"}), 400
 
+        # create the user objectusername = escape(request.form.get('username'))
 
-            
+
+
         # create the user object
         user = {
             "_id": uuid.uuid4().hex,
@@ -65,10 +72,7 @@ class User:
         # encrypt the password
         user['password'] = pbkdf2_sha256.encrypt(user['password'])
 
-        # check for existing email
-        if db.User.find_one({"email": user['email']}):
-            return jsonify({"error": "Email address already in use"}), 400
-
+       
         # insert user if there is no existing email
         if db.User.insert_one(user):
             return self.start_session(user)
@@ -82,9 +86,10 @@ class User:
 
     def login(self):
         # check for user email in db and if password matches
+
+        # login user validation
+        login_email = escape(request.form.get('email'))
         
-        #login user validation
-        login_email = request.form.get('email')
         if re.match("^[a-zA-Z0-9@_.-]+$", login_email) == None:
             return jsonify({"error": "Please input a valid email"}), 400
             
