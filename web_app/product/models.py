@@ -8,6 +8,7 @@ import cloudinary as cloud
 import cloudinary.uploader
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
 
@@ -21,6 +22,13 @@ cloud.config(
 UPLOAD_FOLDER = 'product/UPLOAD_FOLDER'
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg", "gif"])
 
+logger = logging.getLogger('werkzeug') # grabs underlying WSGI logger
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler('user.log') # creates handler for the log file
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler) # adds handler to the werkzeug WSGI logger
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -31,6 +39,7 @@ class Product:
 
         # check if user is logged in
         if session['logged_in'] == True:
+
 
             # check request if it is POST
             if request.method == "POST":
@@ -49,10 +58,12 @@ class Product:
                     except Exception as e:
                         flash(e) # displays cloudinary.execeptions.error
                         return redirect(url_for("user_bp.uploadListing"))
+                    title0 = escape(request.form.get('title'))
+                    description0 = escape(request.form.get('description'))
                     product = {
                         "_id": uuid.uuid4().hex,
                         "uid": session['user']['_id'],
-                        "title": escape(request.form.get('title')),
+                        "title": title0,
                         "dayPrice": request.form.get('dayPrice'),
                         "weekPrice": request.form.get('weekPrice'),
                         "monthPrice": request.form.get('monthPrice'),
@@ -60,9 +71,10 @@ class Product:
                         "stock": request.form.get('stock'),
                         "category": request.form.get('category'),
                         "image_url": upload_result['secure_url'],
-                        "description": escape((request.form.get('description')).strip())
+                        "description": description0.strip()
                     }
                     db.Product.insert_one(product)
+                    logger.info("%s has uploaded product id: %s , titled %s", session['user']['username'], uuid.uuid4().hex, title0)
                     flash('Image successfully uploaded')
                     return redirect(url_for("user_bp.dashboardPage"))
                 else:
@@ -78,36 +90,44 @@ class Product:
             if request.method == "POST":
                 file = request.files['file']
                 if file.filename == '':
+                    title1 = escape(request.form.get('title'))
+                    description1 = escape(request.form.get('description'))
                     product = {"$set":
                                {
-                                   "title": escape(request.form.get('title')),
+                                   "title": title1,
                                    "dayPrice": request.form.get('dayPrice'),
                                    "weekPrice": request.form.get('weekPrice'),
                                    "monthPrice": request.form.get('monthPrice'),
                                    "stock": request.form.get('stock'),
                                    "category": request.form.get('category'),
-                                   "description": escape((request.form.get('description')).strip())
+                                   "description": description1.strip()
                                }
                                }
                     db.Product.update_one(filter, product)
+                    logger.info("%s has updated product id: %s, titled %s", session['user']['username'], uuid.uuid4().hex, title1)
                     flash('Successfully updated')
                     return redirect(url_for("user_bp.updateListing"))
                 else:
                     # check if image file is in acceptable format png, jpeg, jpg
                     if file and allowed_file(file.filename):
-                        upload_result = cloud.uploader.upload(file)
+                        try:
+                            upload_result = cloud.uploader.upload(file)
+                        except Exception as err:
+                            flash(err) # displays cloudinary.execeptions.error
+                        title2 = escape(request.form.get('title'))
+                        description2 = escape(request.form.get('description'))
                         product = {"$set":
-                                   {
-                                       "title": escape(request.form.get('title')),
+                                    {
+                                       "title": title2,
                                        "dayPrice": request.form.get('dayPrice'),
                                        "weekPrice": request.form.get('weekPrice'),
                                        "monthPrice": request.form.get('monthPrice'),
                                        "stock": request.form.get('stock'),
                                        "category": request.form.get('category'),
                                        "image_url": upload_result['secure_url'],
-                                       "description": escape((request.form.get('description')).strip())
+                                       "description": description2.strip()
                                    }
-                                   }
+                        }
                         db.Product.update_one(filter, product)
                         flash('Image successfully uploaded')
                         return redirect(url_for("user_bp.updateListing"))

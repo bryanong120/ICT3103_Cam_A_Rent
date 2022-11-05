@@ -13,6 +13,18 @@
             </div>
         </div>
     </section>
+    <div class="container py-5">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="d-flex justify-content-between">
+            <ul>
+                {% for message in messages %}
+                <span style="color:red;"><h><b>{{message}}</b></h></span>
+                {% endfor %}
+            </ul> 
+        {%endif%}
+        {%endwith%}
+        </div>
     <div class="album py-5 bg-light">
         <div class="container">
                 <form action="/product/search/" method="POST" class="d-flex mt-3">					

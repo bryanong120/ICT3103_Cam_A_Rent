@@ -30,7 +30,7 @@ pipeline {
         sh "pwd"
         sh '''#!/bin/bash
         pytest
-        python3 - m pylint--output - format = parseable--fail - under = 3.0. / web_app--msg - template = "{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" | tee pylint.log || echo "pylint exited with $?"
+		    python3 -m pylint --output-format=parseable --fail-under=3.0 ./web_app --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" | tee pylint.log || echo "pylint exited with $?"
         '''
       }
     }
