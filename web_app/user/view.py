@@ -13,10 +13,13 @@ user_bp = Blueprint("user_bp", __name__,
 def signup():
     return User().signup()
     
-
-@user_bp.route("/login/", methods=['POST'])
-def login():
-    return User().login()
+@user_bp.route("/verifyOTP/", methods=['POST'])
+def verifyOTP():
+    return User().verifyOTP()
+    
+@user_bp.route("/loginOTP/", methods=['POST'])
+def loginOTP():
+    return User.loginOTP()
 
 
 @user_bp.route("/signout/", methods=['GET', 'POST'])

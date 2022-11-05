@@ -13,12 +13,57 @@ from datetime import datetime
 
 class User:
 
-    def start_session(self, user):
+    def start_session(self, user, verified):
         del user['password']
-        session['logged_in'] = True
         session['user'] = user
-        return jsonify(user), 200
-
+        
+        if verified:
+            session['logged_in'] = True
+            return jsonify(user), 200
+        else:
+            session['logged_in'] = False
+            
+    def requestOTP(self):
+        user = session['user']
+        phonenumber = user['phonenumber']
+        #if user['verifed'] == 0:
+        email = user['email']
+            #requestPhoneOTP(phonenumber])
+            #requestEmailOTP(email])
+        return redirect(url_for("verifyOTPPage"))
+        #else:
+            #requestPhoneOTP(phonenumber)
+        return redirect(url_for("loginOTPPage"))
+        
+    def verifyOTP(self):
+        phoneotp = escape(request.form.get('phoneotp'))
+        if re.match("^\+[\d]+$", phoneotp) == None:
+            return jsonify({"error": "Please input valid phone OTP"}), 400
+        
+        emailotp = escape(request.form.get('emailotp'))
+        if re.match("^\+[\d]+$", emailotp) == None:
+            return jsonify({"error": "Please input valid email OTP"}), 400
+            
+        user = session['user']
+        phonenumber = user['phonenumber']
+        email = user['email']
+        if checkPhoneOTP(phonenumber, phoneotp) && checkEmailOTP(email, emailotp):
+            return self.start_session(user, True)
+        
+        return jsonify({"error": "Incorrect code submitted"}), 400
+        
+    def loginOTP(self):
+        phoneotp = escape(request.form.get('phoneotp'))
+        if re.match("^\+[\d]+$", phoneotp) == None:
+            return jsonify({"error": "Please input valid phone OTP"}), 400
+        
+        user = session['user']
+        phonenumber = user['phonenumber']
+        if checkPhoneOTP(phonenumber, phoneotp):
+            return self.start_session(user, True)
+        
+        return jsonify({"error": "Incorrect code submitted"}), 400
+        
     def signup(self):
         username = escape(request.form.get('username'))
         if len(username) < 3:   # username 3 characters and above
@@ -46,7 +91,6 @@ class User:
         password = escape(request.form.get('password'))
         if len(password) == 0:
             return jsonify({"error": "Password cannot be empty"}), 400
-            sssssssssss
         if len(password) < 12:
             return jsonify({"error": "Password should be at least 12 characters long"}), 400
 
@@ -67,7 +111,8 @@ class User:
             "phonenumber": phonenumber,
             "password": password,
         #    "failed_logins": 0,
-            "virtualCredit": 1000
+            "virtualCredit": 1000,
+            "verified" : 0
         }
 
         # encrypt the password
@@ -75,11 +120,14 @@ class User:
 
        
         # insert user if there is no existing email
-        if db.User.insert_one(user):
-            return self.start_session(user)
-
+        #if db.User.insert_one(user):
+            #return self.start_session(user)
+            #return self.requestOTP()
+        self.start_session(user, False)
+        return self.requestOTP()
+        
         # throw error
-        return jsonify({"error:" "Signup failed"}), 400
+        #return jsonify({"error:" "Signup failed"}), 400
 
     def signout(self):
         session.clear()
@@ -102,7 +150,9 @@ class User:
         ## request.form.get('password') is un-encrypted
         ## user['password'] is encrypted
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
-            return self.start_session(user)
+            self.start_session(user, False)
+            return self.requestOTP()
+            #return self.start_session(user)
 
         # db.User.update_one(
         #    {'email': request.form.get('email')},
@@ -161,27 +211,3 @@ class User:
                 'date' : datetime.utcnow(),
             }
             db.Deposit.insert_one(deposit)
-            
-    def sendPhoneOTP(self):
-        # phone number validation
-        phonenumber = escape(request.form.get('phonenumber'))
-        phonenumber = phonenumber.replace(' ','')
-        if re.match("^\+[\d]+$", phonenumber) == None:
-            return jsonify({"error": "Please input valid phone number"}), 400
-        
-        return jsonify({"error": phonenumber}), 400
-        #requestPhoneOTP(phonenumber)
-        
-    def sendEmailOTP(self):
-        # email validation
-        email = escape(request.form.get('email'))
-        if re.match("^[a-zA-Z0-9@_.-]+$", email) == None:
-            return jsonify({"error": "Please input valid email"}), 400
-        # check for existing email
-        if db.User.find_one({"email": email}):
-            return jsonify({"error": "Email address already in use"}), 400
-        
-        return jsonify({"error": email}), 400
-        #requestEmailOTP(email)
-        
-        
