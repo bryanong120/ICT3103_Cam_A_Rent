@@ -43,3 +43,4 @@ Werkzeug==2.2.2
 wrapt==1.13.3
 WTForms==3.0.1
 zipp==3.9.0
+twilio==7.15.1

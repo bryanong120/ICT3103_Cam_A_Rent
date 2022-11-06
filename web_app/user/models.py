@@ -112,7 +112,7 @@ class User:
         phone = escape(request.form.get('phone'))
         phone = phone.replace(' ','')
         if re.match("^\+[\d]+$", phone) == None:
-            return jsonify({"error": "Please input valid phone number"}), 400
+            return jsonify({"error": "Please input valid phone number with country code +65"}), 400
 
         # password validation
         password = escape(request.form.get('password'))
