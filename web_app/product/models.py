@@ -24,7 +24,7 @@ ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg", "gif"])
 
 logger = logging.getLogger('werkzeug') # grabs underlying WSGI logger
 logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler('user.log') # creates handler for the log file
+handler = logging.FileHandler('product.log') # creates handler for the log file
 handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(message)s')
 handler.setFormatter(formatter)
