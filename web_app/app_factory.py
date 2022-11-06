@@ -34,20 +34,12 @@ csrf.init_app(app)
 def signupPage():
     return render_template('signup.html')
     
-@ app.route("/verifyOTP/", methods=['GET'])
-@login_not_required
-def verifyOTPPage():
-    return render_template('verifyOTP.html')
-
+    
 @ app.route("/login/", methods=['GET'])
 @login_not_required
 def loginPage():
     return render_template('login.html')
 
-@ app.route("/loginOTP/", methods=['GET'])
-@login_not_required
-def loginOTPPage():
-    return render_template('loginOTP.html')
 
 @app.route("/", methods=['GET', 'POST'])
 def homePage():

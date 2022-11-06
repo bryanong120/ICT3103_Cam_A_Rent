@@ -11,11 +11,27 @@ user_bp = Blueprint("user_bp", __name__,
 @user_bp.route("/signup/", methods=['POST'])
 def signup():
     return User().signup()
+    
+    
+@user_bp.route("/verifyOTP/", methods=['GET', 'POST'])
+def verifyOTPPage():
+    if request.method == 'POST':
+        return User().verifyOTP()
+    else:
+        return render_template('verifyOTP.html')
 
 
 @user_bp.route("/login/", methods=['POST'])
 def login():
     return User().login()
+    
+    
+@user_bp.route("/loginOTP/", methods=['GET', 'POST'])
+def loginOTPPage():
+    if request.method == 'POST':
+        return User().loginOTP()
+    else:
+        return render_template('loginOTP.html')
 
 
 @user_bp.route("/signout/", methods=['GET', 'POST'])

@@ -12,6 +12,7 @@ def requestPhoneOTP(phone):
     try:
         verify.verifications.create(to=phone, channel='sms')
     except TwilioException:
+        
         return "OTP request limit reached, please try again in 10 minutes"
 
 def checkPhoneOTP(phone, token):

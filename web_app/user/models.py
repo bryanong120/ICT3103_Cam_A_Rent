@@ -6,6 +6,7 @@ import re
 from db import db
 from tokenize import String
 import logging
+from otpverify import requestPhoneOTP,checkPhoneOTP,requestEmailOTP,checkEmailOTP
 
 # status code 200 = OK request fulfilled
 # status code 400 = BAD request
@@ -22,48 +23,70 @@ logger.addHandler(handler) # adds handler to the werkzeug WSGI logger
 class User:
         
     def start_session(self, user, verified):
-        del user['password']
+        if 'password' in user:
+            del user['password']
+            
         session['user'] = user
-        print("helps1")
         
+        #Checks if user has passed the otp verification
         if verified:
             session['logged_in'] = True
             return jsonify(user), 200
-        #else:
-            #session['logged_in'] = False
-            #return
-            
-        session['logged_in'] = False
-        return
+        else:
+            session['logged_in'] = False
+            return
            
     def requestOTP(self):
         user = session['user']
         phone = user['phone']
-        #if user['verifed'] == 0:
-        email = user['email']
-            #requestPhoneOTP(phone])
-            #requestEmailOTP(email])
-        print("help")
-        #return jsonify({'redirect' : url_for("verifyOTPPage")}), 302
-        #return redirect(url_for("verifyOTPPage"))
-        #else:
-            #requestPhoneOTP(phone)
-        #return jsonify({'redirect' : url_for("loginOTPPage")}), 302
-        return redirect(url_for("loginOTPPage"))
+        if user['verified']:
+            logger.info("OTP sent to %s", phone)
+            
+            requestPhoneOTP(phone)
+            return jsonify(True), 200
+        else:
+            email = user['email']
+            logger.info("OTP sent to %s and %s", phone, email)
+            
+            requestPhoneOTP(phone)
+            requestEmailOTP(email)
+            return jsonify(True), 200
         
     def verifyOTP(self):
         phoneotp = escape(request.form.get('phoneotp'))
-        if re.match("^\+[\d]+$", phoneotp) == None:
+        if re.match("^[\d]+$", phoneotp) == None:
             return jsonify({"error": "Please input valid phone OTP"}), 400
         
         emailotp = escape(request.form.get('emailotp'))
-        if re.match("^\+[\d]+$", emailotp) == None:
+        if re.match("^[\d]+$", emailotp) == None:
             return jsonify({"error": "Please input valid email OTP"}), 400
             
         user = session['user']
-        phonenumber = user['phonenumber']
+        phone = user['phone']
         email = user['email']
-        if checkPhoneOTP(phonenumber, phoneotp) and checkEmailOTP(email, emailotp):
+        if checkPhoneOTP(phone, phoneotp) and checkEmailOTP(email, emailotp):
+            logger.info("%s has verified their account", email)
+            db.User.update_one(
+                {'email': email},
+                {
+                '$set': 
+                    {'verified': True}
+                }
+            )
+            return self.start_session(user, True)
+        
+        return jsonify({"error": "Incorrect code submitted"}), 400
+        
+    def loginOTP(self):
+        phoneotp = escape(request.form.get('phoneotp'))
+        if re.match("^[\d]+$", phoneotp) == None:
+            return jsonify({"error": "Please input valid phone OTP"}), 400
+        
+        user = session['user']
+        phone = user['phone']
+        
+        if checkPhoneOTP(phone, phoneotp):
+            logger.info("%s has logged in.", user['email'])
             return self.start_session(user, True)
         
         return jsonify({"error": "Incorrect code submitted"}), 400
@@ -132,8 +155,9 @@ class User:
         # insert user if there is no existing email
         if db.User.insert_one(user):
             logger.info("Username: %s and Email: %s created ", username, email)
-            #return self.start_session(user)
-            return self.start_session(user, True)
+            self.start_session(user, False)
+            return self.requestOTP()
+            #return self.start_session(user, True)
 
         # throw error
         return jsonify({"error:" "Signup failed"}), 400
@@ -166,8 +190,6 @@ class User:
                     {'$set':
                         {'failed_logins': 0}}
                         )
-                logger.info("%s has logged in.", login_email)
-                #return self.start_session(user, True)
                 self.start_session(user, False)
                 return self.requestOTP()
 
