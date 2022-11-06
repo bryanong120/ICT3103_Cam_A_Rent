@@ -150,7 +150,7 @@ class User:
         }
 
         # encrypt the password
-        user['password'] = pbkdf2_sha256.encrypt(user['password'])
+        user['password'] = pbkdf2_sha256.hash(user['password'])
 
        
         # insert user if there is no existing email
