@@ -11,9 +11,9 @@ def requestPhoneOTP(phone):
     verify = getVerifyAPI()
     try:
         verify.verifications.create(to=phone, channel='sms')
+        return True
     except TwilioException:
-        
-        return "OTP request limit reached, please try again in 10 minutes"
+        return False
 
 def checkPhoneOTP(phone, token):
     verify = getVerifyAPI()
@@ -27,8 +27,9 @@ def requestEmailOTP(email):
     verify = getVerifyAPI()
     try:
         verify.verifications.create(to=email, channel='email')
+        return True
     except TwilioException:
-        return "OTP request limit reached, please try again in 10 minutes"
+        return False
 
 def checkEmailOTP(email, token):
     verify = getVerifyAPI()

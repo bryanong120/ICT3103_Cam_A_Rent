@@ -42,15 +42,16 @@ class User:
         if user['verified']:
             logger.info("OTP sent to %s", phone)
             
-            requestPhoneOTP(phone)
-            return jsonify(True), 200
+            if requestPhoneOTP(phone):
+                return jsonify(True), 200
         else:
             email = user['email']
             logger.info("OTP sent to %s and %s", phone, email)
             
-            requestPhoneOTP(phone)
-            requestEmailOTP(email)
-            return jsonify(True), 200
+            if requestPhoneOTP(phone) and requestEmailOTP(email):
+                return jsonify(True), 200
+        
+        return jsonify({"error": "OTP unable to be sent. Please try again later."}), 400
         
     def verifyOTP(self):
         phoneotp = escape(request.form.get('phoneotp'))
@@ -112,7 +113,7 @@ class User:
         phone = escape(request.form.get('phone'))
         phone = phone.replace(' ','')
         if re.match("^\+[\d]+$", phone) == None:
-            return jsonify({"error": "Please input valid phone number with country code +65"}), 400
+            return jsonify({"error": "Please input valid phone number with country code +65 infront"}), 400
 
         # password validation
         password = escape(request.form.get('password'))
