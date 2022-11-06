@@ -20,12 +20,53 @@ logger.addHandler(handler) # adds handler to the werkzeug WSGI logger
 
 
 class User:
-
-    def start_session(self, user):
+        
+    def start_session(self, user, verified):
         del user['password']
-        session['logged_in'] = True
         session['user'] = user
-        return jsonify(user), 200
+        print("helps1")
+        
+        if verified:
+            session['logged_in'] = True
+            return jsonify(user), 200
+        #else:
+            #session['logged_in'] = False
+            #return
+            
+        session['logged_in'] = False
+        return
+           
+    def requestOTP(self):
+        user = session['user']
+        phone = user['phone']
+        #if user['verifed'] == 0:
+        email = user['email']
+            #requestPhoneOTP(phone])
+            #requestEmailOTP(email])
+        print("help")
+        #return jsonify({'redirect' : url_for("verifyOTPPage")}), 302
+        #return redirect(url_for("verifyOTPPage"))
+        #else:
+            #requestPhoneOTP(phone)
+        #return jsonify({'redirect' : url_for("loginOTPPage")}), 302
+        return redirect(url_for("loginOTPPage"))
+        
+    def verifyOTP(self):
+        phoneotp = escape(request.form.get('phoneotp'))
+        if re.match("^\+[\d]+$", phoneotp) == None:
+            return jsonify({"error": "Please input valid phone OTP"}), 400
+        
+        emailotp = escape(request.form.get('emailotp'))
+        if re.match("^\+[\d]+$", emailotp) == None:
+            return jsonify({"error": "Please input valid email OTP"}), 400
+            
+        user = session['user']
+        phonenumber = user['phonenumber']
+        email = user['email']
+        if checkPhoneOTP(phonenumber, phoneotp) and checkEmailOTP(email, emailotp):
+            return self.start_session(user, True)
+        
+        return jsonify({"error": "Incorrect code submitted"}), 400
 
     def signup(self):
         username = escape(request.form.get('username'))
@@ -44,6 +85,11 @@ class User:
         if db.User.find_one({"email": email}):
             return jsonify({"error": "Email address already in use"}), 400
 
+        # phone number validation
+        phone = escape(request.form.get('phone'))
+        phone = phone.replace(' ','')
+        if re.match("^\+[\d]+$", phone) == None:
+            return jsonify({"error": "Please input valid phone number"}), 400
 
         # password validation
         password = escape(request.form.get('password'))
@@ -71,10 +117,12 @@ class User:
             "_id": uuid.uuid4().hex,
             "username": username,
             "email": email,
+            "phone": phone,
             "password": password,
             "virtualCredit": 1000,
             "failed_logins": 0,
-            "last_failed": datetime.utcnow()
+            "last_failed": datetime.utcnow(),
+            "verified" : False
         }
 
         # encrypt the password
@@ -84,7 +132,8 @@ class User:
         # insert user if there is no existing email
         if db.User.insert_one(user):
             logger.info("Username: %s and Email: %s created ", username, email)
-            return self.start_session(user)
+            #return self.start_session(user)
+            return self.start_session(user, True)
 
         # throw error
         return jsonify({"error:" "Signup failed"}), 400
@@ -118,7 +167,9 @@ class User:
                         {'failed_logins': 0}}
                         )
                 logger.info("%s has logged in.", login_email)
-                return self.start_session(user)
+                #return self.start_session(user, True)
+                self.start_session(user, False)
+                return self.requestOTP()
 
             db.User.update_one(
                 {'email': request.form.get('email')},

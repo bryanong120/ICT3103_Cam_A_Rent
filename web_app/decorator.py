@@ -5,7 +5,7 @@ from functools import wraps
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
-        if 'logged_in' in session:
+        if 'logged_in' in session and session['logged_in']:
             return f(*args, **kwargs)
         else:
             return redirect(url_for("homePage"))
@@ -14,7 +14,7 @@ def login_required(f):
 def login_not_required(f): #if user is logged in, redirects user back to home page
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if "logged_in" in session:
+        if "logged_in" in session and session['logged_in']:
             return redirect(url_for("homePage"))
         else:
             return f(*args, **kwargs)

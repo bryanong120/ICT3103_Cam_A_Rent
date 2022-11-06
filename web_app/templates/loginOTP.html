@@ -1,0 +1,25 @@
+{%extends "index.html"%}
+{%block content%} 
+<link href="{{ url_for('static',filename='css/signup.css') }}" rel="stylesheet">
+<div class="card-wrapper">
+  <div class="card">
+      <main class="form-verify w-100 m-auto">
+        <form name="verify_form" action="/user/verify" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+	  <h1 class="h3 mb-3 fw-normal">Please input the code sent to your Phone number and Email</h1>
+          <div class="form-floating">
+            <input type="text" name="phoneotp" class="form-control" id="floatingPhoneOTP" placeholder="5463445">
+            <label for="floatingUserInput">Phone OTP</label>
+          </div>
+		  <div class="form-floating">
+            <input type="text" name="emailotp" class="form-control" id="floatingEmailOTP" placeholder="5463445">
+            <label for="floatingPhoneNumber">Email OTP</label>
+          </div>
+          <p class="error error--hidden"></p>
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+        </form>
+		
+      </main>
+  </div>
+</div>
+{%endblock%}
